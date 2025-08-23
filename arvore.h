@@ -9,7 +9,7 @@ typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
 typedef struct {
     char NomeStream[50];
     char Site[100];
-    Categorias *categorias
+    Categorias *categorias;
 } Stream;
 
 typedef struct{
