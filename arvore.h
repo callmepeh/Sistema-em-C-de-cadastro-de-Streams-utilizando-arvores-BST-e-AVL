@@ -1,10 +1,11 @@
 #ifndef ARVORE_H
 #define ARVORE_H
 
+#include "lista.h"
+
 typedef enum {STREAM, PROGRAMA} TipoDado;
 typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
 typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
-
 
 typedef struct {
     char NomeStream[50];
@@ -18,7 +19,7 @@ typedef struct{
     Periodicidade periodicidade;
     int Tempo;
     char HorarioInicio[10];
-    TipoTransmissao  tipotransmissao;
+    TipoTransmissao tipotransmissao;
 } Programa;
 
 typedef union {
@@ -26,16 +27,18 @@ typedef union {
     Programa programa;
 } DadoUnion;
 
-typedef struct No{
+typedef struct no {
     TipoDado tipo;
     DadoUnion dado;
-    No *esq, *dir;
-}No; 
+    struct no *esq, *dir;
+} No;
 
-
+// funções
+No* criarNo(TipoDado tipo, DadoUnion dado);
 Stream* criarStream(char* nome, char* site);
 Stream* inserirStream(Stream* raiz, Stream* nova);
 Stream* buscarStream(Stream* raiz, char* nome);
-void mostrarStreams(Stream* raiz); 
+void mostrarStreams(Stream* raiz);
 
 #endif
+
