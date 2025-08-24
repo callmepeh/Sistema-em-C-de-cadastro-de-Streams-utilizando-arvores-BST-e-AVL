@@ -3,6 +3,8 @@
 
 #include <time.h>
 
+struct no;
+
 // enums
 typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
 
@@ -31,8 +33,10 @@ typedef struct apresentador {
 } Apresentador;
 
 // funções
-Categorias *criaCategoria(TipoCategoria tipo, char *nome);
+void deixaMaiuscula(char *str);
 struct tm *tempoAtual();
+Categorias *criaCategoria(TipoCategoria tipo, char *nome);
 Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
+void cadastrarCategoria(Categorias *nova, char *nomeST);
 
 #endif

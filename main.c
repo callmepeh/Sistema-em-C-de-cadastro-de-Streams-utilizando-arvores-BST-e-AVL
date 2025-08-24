@@ -5,6 +5,12 @@
 #include "arvore.h"
 
 int main(){
+    Categorias *c = criaCategoria(ENTRETENIMENTO, "Terror");
+    printf("%s - %d\n", c->nome, c->tipo);
+
+    Apresentador *a = criaApresentador("Brenda", "Terror", "Mubi");
+    printf("%s - %s - %s\n", a->nome, a->nomeCategoriaAtual, a->nomeStreamAtual);
+    printf("Antigas(quant: %d): %s - inicio: %d/%d/%d - fim: %d/%d/%d\n", a->quantidadeStAntigas, a->stAntigas->nome, a->stAntigas->inicio.dia, a->stAntigas->inicio.mes, a->stAntigas->inicio.ano, a->stAntigas->fim.dia, a->stAntigas->fim.mes, a->stAntigas->fim.ano);
     return 0;
 }
 
