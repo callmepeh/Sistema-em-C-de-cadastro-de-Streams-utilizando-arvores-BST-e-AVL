@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lista.h"
-#include "arvore.h"
+#include "prototipos.h"
 
 int main(){
     Categorias *c = criaCategoria(ENTRETENIMENTO, "Terror");
