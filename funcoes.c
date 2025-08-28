@@ -20,6 +20,83 @@ struct tm *tempoAtual(){
     return infoTempoLocal;
 }
 
+No* criarNo(TipoDado tipo) {
+    No *novo = (No*) malloc(sizeof(No));
+    if (!novo) return NULL;
+
+    novo->tipo = tipo;
+    novo->esq = novo->dir = NULL;
+
+    if (tipo == STREAM) {
+    
+        printf("Digite o nome da stream: ");
+        scanf(" %[^\n]", novo->dado.stream.NomeStream);
+
+        printf("Digite o site: ");
+        scanf(" %[^\n]", novo->dado.stream.Site);
+
+        novo->dado.stream.categorias = NULL;
+        novo->dado.stream.esq = novo->dado.stream.dir = NULL;
+    }
+    else if (tipo == PROGRAMA) {
+    
+        printf("Digite o nome do programa: ");
+        scanf(" %[^\n]", novo->dado.programa.NomePrograma);
+
+        printf("Digite o nome do apresentador: ");
+        scanf(" %[^\n]", novo->dado.programa.NomeApresentador);
+
+        printf("Digite o horário de início (HH:MM): ");
+        scanf(" %[^\n]", novo->dado.programa.HorarioInicio);
+
+        printf("Digite o tempo (em minutos): ");
+        scanf("%d", &novo->dado.programa.Tempo);
+
+        novo->dado.programa.esq = novo->dado.programa.dir = NULL;
+    }
+
+    return novo;
+}
+
+int inserirArvBin(No **R, No *novono) {
+    if (*R == NULL) {
+        *R = novono;
+        return 1;
+    }
+    //  aqui é pra onde a gente passa o nome da stream ou do programa pra comparar fiz assim pq vi que é uma boa pra minuir codigo
+    char chaveNovo[50], chaveRaiz[50];
+
+    if (novono->tipo == STREAM) strcpy(chaveNovo, novono->dado.stream.NomeStream);
+    else strcpy(chaveNovo, novono->dado.programa.NomePrograma);
+
+    if ((*R)->tipo == STREAM) strcpy(chaveRaiz, (*R)->dado.stream.NomeStream);
+    else strcpy(chaveRaiz, (*R)->dado.programa.NomePrograma);
+
+    // insere normal
+    if (strcmp(chaveNovo, chaveRaiz) < 0) return inserirArvBin(&(*R)->esq, novono);
+    else return inserirArvBin(&(*R)->dir, novono);
+}
+
+void imprimirArvore(No *raiz) {
+    if (raiz == NULL) return;
+
+    imprimirArvore(raiz->esq);
+
+    if (raiz->tipo == STREAM) {
+        printf("[STREAM] Nome: %s | Site: %s\n", 
+                raiz->dado.stream.NomeStream, 
+                raiz->dado.stream.Site);
+    } else {
+        printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
+                raiz->dado.programa.NomePrograma,
+                raiz->dado.programa.NomeApresentador,
+                raiz->dado.programa.HorarioInicio,
+                raiz->dado.programa.Tempo);
+    }
+
+    imprimirArvore(raiz->dir);
+}
+
 Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
     Categorias *nova = (Categorias *)malloc(sizeof(Categorias));
     char tempNomeC[50];
@@ -148,5 +225,53 @@ void cadastrarApresentador(Apresentador *novo, Stream *arvST, Apresentador *list
         if(stream){
             inserirApresentadorOrdenado(&listaAP, novo);
         }
+    }
+}
+
+// Precisa testar td abaixo
+
+void mostrarCategoriasDeST(char *nome, Stream *arvST){
+    Stream *stream = buscarStream(arvST, nome);
+    if(stream){
+        if(stream->categorias){
+            Categoria *atual = stream->categorias;
+            do{
+                printf("%s\n%s\n", atual->nome, atual->tipo);
+                atual = atual->prox;
+            }while(atual != stream->categorias)
+        }
+    }
+}
+
+Categorias *buscaCategoria(Categoria *lista, char *nome){
+    No *atual = lista, *i;
+    if(!atual) i = NULL;
+    else{
+        do{
+            if(strcmp(atual->nome, nome) == 0) strcpy(i, atual);
+            atual->prox;
+        }while(atual != lista);
+    }
+
+    return i;
+}
+
+void mostrarProgsDeCategDeST(char *nomeST, Stream *arvST, char *nomeCateg){
+    Stream *stream = buscarStream(arvST, nome);
+    if(stream){
+        if(existeCategoria(stream->categorias, nomeCateg)){
+            Programa *arvPro = buscaCategoria(stream->categorias, nomeCateg);
+            imprimirArvore(arvPro);
+        }
+    }
+}
+
+void mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST){
+    if(arvST){
+        mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST->esq);
+        if(existeCategoria(arvST->categorias, nomeCateg)){
+            printf("Nome: %s\nSite: %s\n", arvST->NomeStream, arvST->Site);
+        }
+        mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST->dir);
     }
 }
