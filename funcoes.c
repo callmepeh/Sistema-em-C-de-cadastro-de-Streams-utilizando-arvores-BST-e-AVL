@@ -60,37 +60,26 @@ int inserirArvBin(Arvore **R, Arvore *novono) {
         *R = novono;
         inseriu = 1;
     }else{
-        char chaveNovo[50], chaveRaiz[50];
-        strcpy(chaveNovo, novono->dado.STREAM.nome);
-        strcpy(chaveRaiz, (*R)->dado.STREAM.nome);
-
-        // insere normal
-        if (strcmp(chaveNovo, chaveRaiz) < 0) inseriu = inserirArvBin(&((*R)->esq), novono);
-        else if (strcmp(chaveNovo, chaveRaiz) > 0) inseriu = inserirArvBin(&((*R)->dir), novono);
-        else inseriu = 0; 
+        if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) < 0) inseriu = inserirArvBin(&((*R)->esq), novono);
+        else if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) > 0) inseriu = inserirArvBin(&((*R)->dir), novono);
     }
     
     return inseriu;
 }
 
 void imprimirArvore(Arvore *raiz) {
-    if (raiz == NULL) return;
-
-    imprimirArvore(raiz->esq);
-
-    if (raiz->tipo == STREAM) {
-        printf("[STREAM] Nome: %s | Site: %s\n", 
-                raiz->dado.STREAM.nome, 
-                raiz->dado.STREAM.Site);
-    } else {
-        printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
+    if(raiz){
+        imprimirArvore(raiz->esq);
+        if (raiz->tipo == STREAM) printf("[STREAM] Nome: %s | Site: %s\n", raiz->dado.STREAM.nome, raiz->dado.STREAM.Site);
+        else {
+            printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
                 raiz->dado.PROGRAMA.nome,
                 raiz->dado.PROGRAMA.NomeApresentador,
                 raiz->dado.PROGRAMA.HorarioInicio,
                 raiz->dado.PROGRAMA.Tempo);
+        }
+        imprimirArvore(raiz->dir); 
     }
-
-    imprimirArvore(raiz->dir);
 }
 
 Arvore* buscarStream(Arvore *raiz, char *nome){
@@ -106,7 +95,6 @@ Arvore* buscarStream(Arvore *raiz, char *nome){
 }
 
 // LISTAS
-
 Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
     Categorias *nova = (Categorias *)malloc(sizeof(Categorias));
     char tempNomeC[50];
