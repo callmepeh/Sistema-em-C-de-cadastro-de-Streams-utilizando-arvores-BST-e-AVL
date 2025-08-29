@@ -4,28 +4,63 @@
 #include "prototipos.h"
 
 int main(){
-    Categorias *c = criaCategoria(ENTRETENIMENTO, "Terror");
-    printf("%s - %d\n", c->nome, c->tipo);
+    Arvore *streams = NULL;
 
-    Apresentador *a = criaApresentador("Brenda", "Terror", "Mubi");
-    printf("%s - %s - %s\n", a->nome, a->nomeCategoriaAtual, a->nomeStreamAtual);
-    printf("Antigas(quant: %d): %s - inicio: %d/%d/%d - fim: %d/%d/%d\n", a->quantidadeStAntigas, a->stAntigas->nome, a->stAntigas->inicio.dia, a->stAntigas->inicio.mes, a->stAntigas->inicio.ano, a->stAntigas->fim.dia, a->stAntigas->fim.mes, a->stAntigas->fim.ano);
+    Arvore *novaStream = (Arvore *)malloc(sizeof(Arvore));
+    if(!novaStream){
+        printf("Ocorreu um erro ao alocar memoria.\n");
+        exit(1);
+    }
+
+    criarNo(STREAM, &novaStream);
+    int verifica = inserirArvBin(&streams, novaStream);
+    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
+    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
+
+    // inserir outra
+
+    Arvore *outraSTream = (Arvore *)malloc(sizeof(Arvore));
+    if(!outraSTream){
+        printf("Ocorreu um erro ao alocar memoria.\n");
+        exit(1);
+    }
+
+    criarNo(STREAM, &outraSTream);
+    verifica = inserirArvBin(&streams, outraSTream);
+    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
+    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
+
+    imprimirArvore(streams);
+
+    //programas
+
+
+    Arvore *programas = NULL;
+    Arvore *novaPrograma = (Arvore *)malloc(sizeof(Arvore));
+    if(!novaPrograma){
+        printf("Ocorreu um erro ao alocar memoria.\n");
+        exit(1);
+    }
+
+     criarNo(PROGRAMA, &novaPrograma);
+    verifica = inserirArvBin(&programas, novaPrograma);
+    if(verifica) printf("Programa inserido na arvore com sucesso.\n");
+    else printf("Esse programa ja existe na arvore, logo nao foi possivel inserir.\n");
+
+    // inserir outra
+
+    Arvore *outroPrgrama = (Arvore *)malloc(sizeof(Arvore));
+    if(!outroPrgrama){
+        printf("Ocorreu um erro ao alocar memoria.\n");
+        exit(1);
+    }
+
+    criarNo(PROGRAMA, &outroPrgrama);
+    verifica = inserirArvBin(&programas, outroPrgrama);
+    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
+    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
+
+    imprimirArvore(programas);
+
     return 0;
 }
-
-//Para rodar: gcc main.c lista.c arvore.c -o programa
-//            ./programa
-
-
-//Teste funções criaCategoria e criaApresentador 
-
-/*
-
- Categorias *c = criaCategoria(ENTRETENIMENTO, "Terror");
-    printf("%s - %d\n", c->nome, c->tipo);
-
-    Apresentador *a = criaApresentador("Brenda", "Terror", "Mubi");
-    printf("%s - %s - %s\n", a->nome, a->nomeCategoriaAtual, a->nomeStreamAtual);
-    printf("Antigas(quant: %d): %s - inicio: %d/%d/%d - fim: %d/%d/%d\n", a->quantidadeStAntigas, a->stAntigas->nome, a->stAntigas->inicio.dia, a->stAntigas->inicio.mes, a->stAntigas->inicio.ano, a->stAntigas->fim.dia, a->stAntigas->fim.mes, a->stAntigas->fim.ano);
-
-*/

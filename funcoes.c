@@ -6,6 +6,7 @@
 
 #include "prototipos.h"
 
+// UTILITÁRIOS
 void deixaMaiuscula(char *str){
     for(int i=0; str[i]!='\0'; i++) str[i] = toupper((unsigned char) str[i]);
 }
@@ -13,89 +14,98 @@ void deixaMaiuscula(char *str){
 struct tm *tempoAtual(){
     time_t agora;
     time(&agora);
-
     struct tm *infoTempoLocal;
     infoTempoLocal = localtime(&agora);
-
     return infoTempoLocal;
 }
 
-No* criarNo(TipoDado tipo) {
-    No *novo = (No*) malloc(sizeof(No));
-    if (!novo) return NULL;
-
-    novo->tipo = tipo;
-    novo->esq = novo->dir = NULL;
+// ÁRVORE
+// Mudar para n ter print dentro de função n void
+void *criarNo(TipoDado tipo, Arvore **novoNo) {
+    (*novoNo)->tipo = tipo;
+    (*novoNo)->esq = (*novoNo)->dir = NULL;
+    char auxi[50];
 
     if (tipo == STREAM) {
-    
         printf("Digite o nome da stream: ");
-        scanf(" %[^\n]", novo->dado.stream.NomeStream);
+        scanf(" %[^\n]", auxi);
+        deixaMaiuscula(auxi);
+        strcpy((*novoNo)->dado.STREAM.nome, auxi);
 
         printf("Digite o site: ");
-        scanf(" %[^\n]", novo->dado.stream.Site);
+        scanf(" %[^\n]", (*novoNo)->dado.STREAM.Site);
 
-        novo->dado.stream.categorias = NULL;
-        novo->dado.stream.esq = novo->dado.stream.dir = NULL;
+        (*novoNo)->dado.STREAM.categorias = NULL;
     }
     else if (tipo == PROGRAMA) {
-    
         printf("Digite o nome do programa: ");
-        scanf(" %[^\n]", novo->dado.programa.NomePrograma);
+        scanf(" %[^\n]", auxi);
+        deixaMaiuscula(auxi);
+        strcpy((*novoNo)->dado.PROGRAMA.nome, auxi);
 
         printf("Digite o nome do apresentador: ");
-        scanf(" %[^\n]", novo->dado.programa.NomeApresentador);
+        scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.NomeApresentador);
 
         printf("Digite o horário de início (HH:MM): ");
-        scanf(" %[^\n]", novo->dado.programa.HorarioInicio);
+        scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.HorarioInicio);
 
         printf("Digite o tempo (em minutos): ");
-        scanf("%d", &novo->dado.programa.Tempo);
-
-        novo->dado.programa.esq = novo->dado.programa.dir = NULL;
+        scanf("%d", &((*novoNo)->dado.PROGRAMA.Tempo));
     }
-
-    return novo;
 }
 
-int inserirArvBin(No **R, No *novono) {
+int inserirArvBin(Arvore **R, Arvore *novono) {
+    int inseriu = 0;
     if (*R == NULL) {
         *R = novono;
-        return 1;
+        inseriu = 1;
+    }else{
+        char chaveNovo[50], chaveRaiz[50];
+        strcpy(chaveNovo, novono->dado.STREAM.nome);
+        strcpy(chaveRaiz, (*R)->dado.STREAM.nome);
+
+        // insere normal
+        if (strcmp(chaveNovo, chaveRaiz) < 0) inseriu = inserirArvBin(&((*R)->esq), novono);
+        else if (strcmp(chaveNovo, chaveRaiz) > 0) inseriu = inserirArvBin(&((*R)->dir), novono);
+        else inseriu = 0; 
     }
-    //  aqui é pra onde a gente passa o nome da stream ou do programa pra comparar fiz assim pq vi que é uma boa pra minuir codigo
-    char chaveNovo[50], chaveRaiz[50];
-
-    if (novono->tipo == STREAM) strcpy(chaveNovo, novono->dado.stream.NomeStream);
-    else strcpy(chaveNovo, novono->dado.programa.NomePrograma);
-
-    if ((*R)->tipo == STREAM) strcpy(chaveRaiz, (*R)->dado.stream.NomeStream);
-    else strcpy(chaveRaiz, (*R)->dado.programa.NomePrograma);
-
-    // insere normal
-    if (strcmp(chaveNovo, chaveRaiz) < 0) return inserirArvBin(&(*R)->esq, novono);
-    else return inserirArvBin(&(*R)->dir, novono);
+    
+    return inseriu;
 }
 
-void imprimirArvore(No *raiz) {
+void imprimirArvore(Arvore *raiz) {
     if (raiz == NULL) return;
 
     imprimirArvore(raiz->esq);
 
     if (raiz->tipo == STREAM) {
         printf("[STREAM] Nome: %s | Site: %s\n", 
-                raiz->dado.stream.NomeStream, 
-                raiz->dado.stream.Site);
+                raiz->dado.STREAM.nome, 
+                raiz->dado.STREAM.Site);
     } else {
         printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
-                raiz->dado.programa.NomePrograma,
-                raiz->dado.programa.NomeApresentador,
-                raiz->dado.programa.HorarioInicio,
-                raiz->dado.programa.Tempo);
+                raiz->dado.PROGRAMA.nome,
+                raiz->dado.PROGRAMA.NomeApresentador,
+                raiz->dado.PROGRAMA.HorarioInicio,
+                raiz->dado.PROGRAMA.Tempo);
     }
 
     imprimirArvore(raiz->dir);
 }
+
+Arvore* buscarStream(Arvore *raiz, char *nome){
+    deixaMaiuscula(nome);
+    Arvore *resultadoBusca = NULL;
+    if(raiz){
+        if(strcmp(raiz->dado.STREAM.nome, nome) == 0) resultadoBusca = raiz;
+        else if(strcmp(raiz->dado.STREAM.nome, nome) < 0) resultadoBusca = buscarStream(raiz->dir, nome);
+        else resultadoBusca = buscarStream(raiz->esq, nome);
+    }
+
+    return resultadoBusca;
+}
+
+// LISTAS
 
 Categorias *criaCategoria(TipoCategoria tipoC, char *nomeC){
     Categorias *nova = (Categorias *)malloc(sizeof(Categorias));
@@ -160,40 +170,38 @@ int existeCategoria(Categorias *lista, char *nome){
 }
 
 
-void cadastrarCategoria(Categorias *nova, char *nomeST, Stream *arvST){
-    Stream *stream = buscarStream(arvST, nomeST);
+void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
+    Arvore *stream = buscarStream(arvST, nomeST);
         if(stream){
 
-            Categorias *lista = stream->categorias;
+            Categorias *lista = stream->dado.STREAM.categorias;
 
             if(lista){  
                 if(existeCategoria(lista, nova->nome) == 0){
 
-                    Categorias *anterior = stream->categorias;
-                    Categorias *proximo = stream->categorias->prox;
+                    Categorias *anterior = stream->dado.STREAM.categorias;
+                    Categorias *proximo = stream->dado.STREAM.categorias->prox;
 
                     if (strcmp(nova->nome, anterior->nome) < 0) {
-                        while (proximo != stream->categorias) proximo = proximo->prox;
+                        while (proximo != stream->dado.STREAM.categorias) proximo = proximo->prox;
                         
                         proximo->prox = nova;
                         nova->prox = anterior;
-                        stream->categorias = nova;
+                        stream->dado.STREAM.categorias = nova;
                     } else {
-                        while (proximo != stream->categorias && strcmp(nova->nome, proximo->nome) > 0) {
+                        while (proximo != stream->dado.STREAM.categorias && strcmp(nova->nome, proximo->nome) > 0) {
                             anterior = proximo;
                             proximo = proximo->prox;
                         }
                         anterior->prox = nova;
                         nova->prox = proximo;
                     }
-                }else{
-                    stream->categorias = nova;
-                    nova->prox = nova;
                 }
+            }else{
+                stream->dado.STREAM.categorias = nova;
+                nova->prox = nova;
             }
-
         }
-    
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -209,7 +217,7 @@ int existeApresentador(Apresentador *lista, char *nome){
 void inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
     if(*lista){
         if(strcmp((*lista)->nome, novo->nome) > 0){
-            novo->prox = lista;
+            novo->prox = *lista;
             (*lista)->ant->prox = novo;
             novo->ant = (*lista)->ant;
             (*lista)->ant = novo;
@@ -219,59 +227,59 @@ void inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
     }
 }
 
-void cadastrarApresentador(Apresentador *novo, Stream *arvST, Apresentador *listaAP){
+void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP){
     if(existeApresentador(listaAP, novo->nome) == 0){
-        Stream *stream = buscarStream(arvST, novo->nomeStreamAtual);
+        Arvore *stream = buscarStream(arvST, novo->nomeStreamAtual);
         if(stream){
             inserirApresentadorOrdenado(&listaAP, novo);
         }
     }
 }
 
+// FUNÇÕES DE MOSTRAR/REMOVER DE LISTAS E FUNÇÕES
 // Precisa testar td abaixo
 
-void mostrarCategoriasDeST(char *nome, Stream *arvST){
-    Stream *stream = buscarStream(arvST, nome);
+void mostrarCategoriasDeST(char *nome, Arvore *arvST){
+    Arvore *stream = buscarStream(arvST, nome);
     if(stream){
-        if(stream->categorias){
-            Categoria *atual = stream->categorias;
+        if(stream->dado.STREAM.categorias){
+            Categorias *atual = stream->dado.STREAM.categorias;
             do{
-                printf("%s\n%s\n", atual->nome, atual->tipo);
+                printf("%s\n%d\n", atual->nome, atual->tipo);
                 atual = atual->prox;
-            }while(atual != stream->categorias)
+            }while(atual != stream->dado.STREAM.categorias);
         }
     }
 }
 
-Categorias *buscaCategoria(Categoria *lista, char *nome){
-    No *atual = lista, *i;
-    if(!atual) i = NULL;
-    else{
+Categorias *buscaCategoria(Categorias *lista, char *nome){
+    Categorias *atual = lista, *i = NULL;
+    if(atual){
         do{
-            if(strcmp(atual->nome, nome) == 0) strcpy(i, atual);
-            atual->prox;
-        }while(atual != lista);
+            if(strcmp(atual->nome, nome) == 0) i = atual;
+            atual = atual->prox;
+        }while(atual != lista); 
     }
 
     return i;
 }
 
-void mostrarProgsDeCategDeST(char *nomeST, Stream *arvST, char *nomeCateg){
-    Stream *stream = buscarStream(arvST, nome);
+void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
+    Arvore *stream = buscarStream(arvST, nomeST);
     if(stream){
-        if(existeCategoria(stream->categorias, nomeCateg)){
-            Programa *arvPro = buscaCategoria(stream->categorias, nomeCateg);
-            imprimirArvore(arvPro);
+        if(existeCategoria(stream->dado.STREAM.categorias, nomeCateg)){
+            Categorias *categoria = buscaCategoria(stream->dado.STREAM.categorias, nomeCateg);
+            imprimirArvore(categoria->programa);
         }
     }
 }
 
-void mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST){
+void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST){
     if(arvST){
-        mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST->esq);
-        if(existeCategoria(arvST->categorias, nomeCateg)){
-            printf("Nome: %s\nSite: %s\n", arvST->NomeStream, arvST->Site);
+        mostrarStsQueTemCategoria(nomeCateg, arvST->esq);
+        if(existeCategoria(arvST->dado.STREAM.categorias, nomeCateg)){
+            printf("Nome: %s\nSite: %s\n", arvST->dado.STREAM.nome, arvST->dado.STREAM.Site);
         }
-        mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST->dir);
+        mostrarStsQueTemCategoria(nomeCateg, arvST->dir);
     }
 }

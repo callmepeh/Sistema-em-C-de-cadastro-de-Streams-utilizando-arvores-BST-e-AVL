@@ -1,46 +1,50 @@
 #ifndef PROTOTIPOS_H
 #define PROTOTIPOS_H
 
+#include <time.h>
+
+// PRÉ DEFINIÇÕES DE STRUCTS
 struct programa;
 struct categorias;
 struct stream;
 struct apresentador;
+struct arvore;
 
+// ENUMS
 typedef enum {STREAM, PROGRAMA} TipoDado;
 typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
 typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
 typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
 
-
+// STRUCTS E UNION PARA ÁRVORES
 typedef struct stream {
-    char NomeStream[50], Site[100];
+    char nome[50], Site[100];
     struct categorias *categorias;
-    struct stream *esq, *dir;
 } Stream;
 
 typedef struct programa {
-    char NomePrograma[50], NomeApresentador[50], HorarioInicio[10];
+    char nome[50], NomeApresentador[50], HorarioInicio[10];
     int Tempo;
     Periodicidade periodicidade;
     TipoTransmissao tipotransmissao;
-    struct programa *esq, *dir;
 } Programa;
 
 typedef union {
-    Stream stream;
-    Programa programa;
+    struct stream STREAM;
+    struct programa PROGRAMA;
 } DadoUnion;
 
-typedef struct No{
+typedef struct arvore{
     TipoDado tipo;
     DadoUnion dado;
-    struct No *esq, *dir;
-}No; 
+    struct arvore *esq, *dir;
+}Arvore; 
 
+// STRUCTS PARA LISTAS E VETOR
 typedef struct categorias {
     TipoCategoria tipo;
     char nome[50];
-    struct programa *programa;
+    struct arvore *programa;
     struct categorias *prox;
 } Categorias;
 
@@ -60,30 +64,35 @@ typedef struct apresentador {
     struct apresentador *prox, *ant;
 } Apresentador;
 
-
-
+// UTILITÁRIOS
 void deixaMaiuscula(char *str);
 struct tm *tempoAtual();
 
+// LISTAS
+// Categorias
 Categorias *criaCategoria(TipoCategoria tipo, char *nome);
+int existeCategoria(Categorias *lista, char *nome);
+void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST);
+Categorias *buscaCategoria(Categorias *lista, char *nome);
+void mostrarCategoriasDeST(char *nomeST, Arvore *arvST);
 Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
 
-int existeCategoria(Categorias *lista, char *nome);
-void cadastrarCategoria(Categorias *nova, char *nomeST, Stream *arvST);
-
+// Apresentador
 int existeApresentador(Apresentador *lista, char *nome);
+void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP);
 void inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
-void cadastrarApresentador(Apresentador *novo, Stream *arvST, Apresentador *listaAP);
 
-void mostrarCategoriasDeST(char *nomeST);
-Categorias *buscaCategoria(Categoria *lista, char *nome);
-void mostrarProgsDeCategDeST(char *nomeST, Stream *arvST, char *nomeCateg);
-void mostrarStsQueTemCategoria(char *nomeCateg, Stream *arvST);
+// ÁRVORES
+void *criarNo(TipoDado tipo, Arvore **novoNo);
+int inserirArvBin(Arvore **R, Arvore *novono);
+void imprimirArvore(Arvore *raiz);
+Arvore* buscarStream(Arvore *raiz, char *nome);
 
-No* criarNo(TipoDado tipo);
-int inserirArvBin(No **R, No *novono);
-void imprimirArvore(No *raiz);
-//Stream* buscarStream(Stream *raiz, char *nome);
+// Streams
 void mostrarStreams(Stream *raiz);
+void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
+
+// Programas
+void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg);
 
 #endif
