@@ -67,6 +67,8 @@ typedef struct apresentador {
 // UTILITÁRIOS
 void deixaMaiuscula(char *str);
 struct tm *tempoAtual();
+Arvore *inicializar();
+Arvore *alocar(Arvore *arv, TipoDado tipo);
 
 // LISTAS
 // Categorias
@@ -83,13 +85,12 @@ void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *list
 void inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
 
 // ÁRVORES
-void *criarNo(TipoDado tipo, Arvore **novoNo);
+void *preencherDado(TipoDado tipo, Arvore **novoNo);
 int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
 Arvore* buscarNaArvore(Arvore *raiz, char *nome);
 
 // Streams
-void mostrarStreams(Stream *raiz);
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
 
 // Programas

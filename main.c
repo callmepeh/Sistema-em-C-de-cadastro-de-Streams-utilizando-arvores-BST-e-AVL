@@ -4,81 +4,57 @@
 
 #include "prototipos.h"
 
+// MAIN PARA TESTES
+
 int main(){
     setlocale(LC_ALL, "Portuguese");
+    int verifica;
+    // INICIALIZA ÁRVORE DE STREAMS
+    Arvore *streams = inicializar();
 
-    Arvore *streams = NULL;
+    // ALOCA NOVO NÓ PARA A ÁRVORE DE STREAMS
+    Arvore *novaStream;
+    if(!(novaStream = alocar(novaStream, STREAM))) exit(1);
 
-    Arvore *novaStream = (Arvore *)malloc(sizeof(Arvore));
-    if(!novaStream){
-        printf("Ocorreu um erro ao alocar memoria.\n");
-        exit(1);
-    }
+    // PREENCHE O NOVO NÓ PARA A ÁRVORE DE STREAMS
+    preencherDado(STREAM, &novaStream);
 
-    criarNo(STREAM, &novaStream);
-    int verifica = inserirArvBin(&streams, novaStream);
-    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
-    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
-
+    // INSERE O NOVO NÓ NA ÁRVORE DE STREAMS
+    if((verifica = inserirArvBin(&streams, novaStream))) printf("Stream inserida na árvore com sucesso.\n");
+    else printf("Essa stream já existe na árvore, logo não foi possível inserir.\n");
     printf(" \n");
 
-    // inserir outra
-
-    Arvore *outraSTream = (Arvore *)malloc(sizeof(Arvore));
-    if(!outraSTream){
-        printf("Ocorreu um erro ao alocar memoria.\n");
-        exit(1);
-    }
-
-    criarNo(STREAM, &outraSTream);
-    verifica = inserirArvBin(&streams, outraSTream);
-    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
-    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
-
-    printf(" \n");
-
+    // IMPRIME EM ORDEM ALFABETICA A ÁRVORE DE STREAMS
     imprimirArvore(streams);
-
     printf(" \n");
 
-    //programas
+    // INICIALIZA A ÁRVORE DE PROGRAMAS 
+    Arvore *programas = inicializar();
 
-    Arvore *programas = NULL;
-    Arvore *novaPrograma = (Arvore *)malloc(sizeof(Arvore));
-    if(!novaPrograma){
-        printf("Ocorreu um erro ao alocar memoria.\n");
-        exit(1);
-    }
+    // ALOCA UM NOVO NÓ PARA A ÁRVORE DE PROGRAMAS
+    Arvore *novaPrograma;;
+    if(!(novaPrograma = alocar(programas, PROGRAMA))) exit(1);
 
-    criarNo(PROGRAMA, &novaPrograma);
-    verifica = inserirArvBin(&programas, novaPrograma);
-    if(verifica) printf("Programa inserido na arvore com sucesso.\n");
-    else printf("Esse programa ja existe na arvore, logo nao foi possivel inserir.\n");
+    // PREENCHE O NOVO NÓ PARA A ÁRVORE DE PROGRAMAS
+    preencherDado(PROGRAMA, &novaPrograma);
 
+    // INSERE NOVO NÓ NA ÁRVORE DE PROGRAMAS
+    if((verifica = inserirArvBin(&programas, novaPrograma))) printf("Programa inserido na árvore com sucesso.\n");
+    else printf("Esse programa ja existe na arvore, logo não foi possível inserir.\n");
     printf(" \n");
 
-    // inserir outra
-
-    Arvore *outroPrgrama = (Arvore *)malloc(sizeof(Arvore));
-    if(!outroPrgrama){
-        printf("Ocorreu um erro ao alocar memoria.\n");
-        exit(1);
-    }
-
-    criarNo(PROGRAMA, &outroPrgrama);
-    verifica = inserirArvBin(&programas, outroPrgrama);
-    if(verifica) printf("Stream inserida na arvore com sucesso.\n");
-    else printf("Essa stream ja existe na arvore, logo nao foi possivel inserir.\n");
-
-    printf(" \n");
-
+    // IMPRIME EM ORDEM A ÁRVORE DE PROGRAMAS
     imprimirArvore(programas);
-
     printf(" \n");
 
-    Arvore *busca = buscarNaArvore(programas, "dexter");
-    if(busca) printf("Programa encontrado.\n");
+    // BUSCA PROGRAMA NA ÁRVORE DE PROGRAMAS
+    Arvore *busca;
+    if((busca = buscarNaArvore(programas, "dexter"))) printf("Programa encontrado.\n");
     else printf("Programa não encontrado.\n");
+
+    // BUSCA STREAM NA ÁRVORE DE STREAMS
+    if((busca = buscarNaArvore(streams, "prime video"))) printf("Stream encontrada.\n");
+    else printf("Stream não encontrada.\n");
 
     return 0;
 }

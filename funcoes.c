@@ -7,6 +7,18 @@
 #include "prototipos.h"
 
 // UTILITÁRIOS
+Arvore *inicializar(){
+    return NULL;
+}
+
+Arvore *alocar(Arvore *arv, TipoDado tipo){
+    arv = (Arvore *)malloc(sizeof(Arvore));
+    if(!arv) return NULL;
+    arv->tipo = tipo;
+    arv->esq = arv->dir = NULL;
+    return arv;
+}
+
 void deixaMaiuscula(char *str){
     for(int i=0; str[i]!='\0'; i++) str[i] = toupper((unsigned char) str[i]);
 }
@@ -20,9 +32,7 @@ struct tm *tempoAtual(){
 }
 
 // ÁRVORE
-void *criarNo(TipoDado tipo, Arvore **novoNo) {
-    (*novoNo)->tipo = tipo;
-    (*novoNo)->esq = (*novoNo)->dir = NULL;
+void *preencherDado(TipoDado tipo, Arvore **novoNo) {
     char auxi[50];
 
     if (tipo == STREAM) {
