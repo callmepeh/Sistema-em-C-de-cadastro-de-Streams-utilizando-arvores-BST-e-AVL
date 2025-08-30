@@ -86,7 +86,7 @@ void inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
 void *criarNo(TipoDado tipo, Arvore **novoNo);
 int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
-Arvore* buscarStream(Arvore *raiz, char *nome);
+Arvore* buscarNaArvore(Arvore *raiz, char *nome);
 
 // Streams
 void mostrarStreams(Stream *raiz);

@@ -20,7 +20,6 @@ struct tm *tempoAtual(){
 }
 
 // ÁRVORE
-// Mudar para n ter print dentro de função n void
 void *criarNo(TipoDado tipo, Arvore **novoNo) {
     (*novoNo)->tipo = tipo;
     (*novoNo)->esq = (*novoNo)->dir = NULL;
@@ -82,16 +81,24 @@ void imprimirArvore(Arvore *raiz) {
     }
 }
 
-Arvore* buscarStream(Arvore *raiz, char *nome){
-    deixaMaiuscula(nome);
-    Arvore *resultadoBusca = NULL;
+Arvore* buscarNaArvore(Arvore *raiz, char *nome){
+    Arvore *busca = NULL;
     if(raiz){
-        if(strcmp(raiz->dado.STREAM.nome, nome) == 0) resultadoBusca = raiz;
-        else if(strcmp(raiz->dado.STREAM.nome, nome) < 0) resultadoBusca = buscarStream(raiz->dir, nome);
-        else resultadoBusca = buscarStream(raiz->esq, nome);
+        char nome_copia[50];
+        strcpy(nome_copia, nome);
+        deixaMaiuscula(nome_copia);
+        int cmp_result;
+
+        if (raiz->tipo == STREAM) cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome);
+        else if (raiz->tipo == PROGRAMA) cmp_result = strcmp(nome_copia, raiz->dado.PROGRAMA.nome);
+        else return NULL; // Tipo de dado desconhecido
+
+        if ((cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome)) == 0) busca = raiz;
+        else if ((cmp_result = strcmp(nome_copia, raiz->dado.PROGRAMA.nome)) < 0) busca = buscarNaArvore(raiz->esq, nome_copia);
+        else busca = buscarNaArvore(raiz->dir, nome_copia);
     }
 
-    return resultadoBusca;
+    return busca;
 }
 
 // LISTAS
@@ -159,7 +166,7 @@ int existeCategoria(Categorias *lista, char *nome){
 
 
 void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
-    Arvore *stream = buscarStream(arvST, nomeST);
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
         if(stream){
 
             Categorias *lista = stream->dado.STREAM.categorias;
@@ -217,7 +224,7 @@ void inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
 
 void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP){
     if(existeApresentador(listaAP, novo->nome) == 0){
-        Arvore *stream = buscarStream(arvST, novo->nomeStreamAtual);
+        Arvore *stream = buscarNaArvore(arvST, novo->nomeStreamAtual);
         if(stream){
             inserirApresentadorOrdenado(&listaAP, novo);
         }
@@ -228,7 +235,7 @@ void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *list
 // Precisa testar td abaixo
 
 void mostrarCategoriasDeST(char *nome, Arvore *arvST){
-    Arvore *stream = buscarStream(arvST, nome);
+    Arvore *stream = buscarNaArvore(arvST, nome);
     if(stream){
         if(stream->dado.STREAM.categorias){
             Categorias *atual = stream->dado.STREAM.categorias;
@@ -253,7 +260,7 @@ Categorias *buscaCategoria(Categorias *lista, char *nome){
 }
 
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg){
-    Arvore *stream = buscarStream(arvST, nomeST);
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
     if(stream){
         if(existeCategoria(stream->dado.STREAM.categorias, nomeCateg)){
             Categorias *categoria = buscaCategoria(stream->dado.STREAM.categorias, nomeCateg);
