@@ -99,12 +99,10 @@ Arvore* buscarNaArvore(Arvore *raiz, char *nome){
         deixaMaiuscula(nome_copia);
         int cmp_result;
 
-        if (raiz->tipo == STREAM) cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome);
-        else if (raiz->tipo == PROGRAMA) cmp_result = strcmp(nome_copia, raiz->dado.PROGRAMA.nome);
-        else return NULL; // Tipo de dado desconhecido
+        cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome);
 
         if ((cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome)) == 0) busca = raiz;
-        else if ((cmp_result = strcmp(nome_copia, raiz->dado.PROGRAMA.nome)) < 0) busca = buscarNaArvore(raiz->esq, nome_copia);
+        else if ((cmp_result = strcmp(nome_copia, raiz->dado.STREAM.nome)) < 0) busca = buscarNaArvore(raiz->esq, nome_copia);
         else busca = buscarNaArvore(raiz->dir, nome_copia);
     }
 
@@ -174,15 +172,14 @@ int existeCategoria(Categorias *lista, char *nome){
     return i;
 }
 
-
 void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
     Arvore *stream = buscarNaArvore(arvST, nomeST);
         if(stream){
 
-            Categorias *lista = stream->dado.STREAM.categorias;
+            Categorias **lista = &(stream->dado.STREAM.categorias);
 
-            if(lista){  
-                if(existeCategoria(lista, nova->nome) == 0){
+            if(*lista){  
+                if(existeCategoria(*lista, nova->nome) == 0){
 
                     Categorias *anterior = stream->dado.STREAM.categorias;
                     Categorias *proximo = stream->dado.STREAM.categorias->prox;
@@ -194,12 +191,17 @@ void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
                         nova->prox = anterior;
                         stream->dado.STREAM.categorias = nova;
                     } else {
-                        while (proximo != stream->dado.STREAM.categorias && strcmp(nova->nome, proximo->nome) > 0) {
+                        while (proximo != stream->dado.STREAM.categorias && strcmp(nova->nome, proximo->nome) >= 0) {
                             anterior = proximo;
                             proximo = proximo->prox;
                         }
-                        anterior->prox = nova;
-                        nova->prox = proximo;
+                        if(strcmp(proximo->nome, stream->dado.STREAM.categorias->nome) == 0){
+                            anterior->prox = nova;
+                            nova->prox = stream->dado.STREAM.categorias;
+                        }else{
+                            anterior->prox = nova;
+                            nova->prox = proximo;
+                        }
                     }
                 }
             }else{
@@ -221,13 +223,25 @@ int existeApresentador(Apresentador *lista, char *nome){
 
 void inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
     if(*lista){
-        if(strcmp((*lista)->nome, novo->nome) > 0){
+        if(strcmp(novo->nome, (*lista)->nome) < 0){
             novo->prox = *lista;
-            (*lista)->ant->prox = novo;
-            novo->ant = (*lista)->ant;
             (*lista)->ant = novo;
+            *lista = novo;
         }else{
-            inserirApresentadorOrdenado(&((*lista)->prox), novo);
+            Apresentador *atual = *lista, *ant = NULL;
+            while(atual && (strcmp(novo->nome, atual->nome)) >= 0){
+                ant = atual;
+                atual = atual->prox;
+            }
+            if(atual){
+                ant->prox = novo;
+                novo->ant = ant;
+                atual->ant = novo;
+                novo->prox = atual;
+            }else{
+                ant->prox = novo;
+                novo->ant = ant;
+            }
         }
     }
 }
