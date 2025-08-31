@@ -15,6 +15,7 @@ typedef enum {STREAM, PROGRAMA} TipoDado;
 typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
 typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
 typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
+typedef enum {REMOVER, ALTERAR} ProgramaAtual;
 
 // STRUCTS E UNION PARA ÁRVORES
 typedef struct stream {
@@ -69,31 +70,40 @@ void deixaMaiuscula(char *str);
 struct tm *tempoAtual();
 Arvore *inicializar();
 Arvore *alocar(Arvore *arv, TipoDado tipo);
+Categorias *alocarCategoria(Categorias *no);
+Apresentador *alocarApresentador(Apresentador *no);
+int ehFolha(Arvore *no);
+Arvore *soUmFilho(Arvore *no);
+Arvore *maiorAhEsquerda(Arvore *no);
+int existeCategoria(Categorias *lista, char *nome);
+int existeApresentador(Apresentador *lista, char *nome);
 
 // LISTAS
 // Categorias
 Categorias *criaCategoria(TipoCategoria tipo, char *nome);
-int existeCategoria(Categorias *lista, char *nome);
-void cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST);
+int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST);
 Categorias *buscaCategoria(Categorias *lista, char *nome);
 void mostrarCategoriasDeST(char *nomeST, Arvore *arvST);
-Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
+Categorias *removerCategoria(Categorias *lista, Categorias *no);
+int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg);
 
 // Apresentador
-int existeApresentador(Apresentador *lista, char *nome);
-void cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP);
-void inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
+int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP);
+int inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
+Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
 
 // ÁRVORES
 void *preencherDado(TipoDado tipo, Arvore **novoNo);
 int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
 Arvore* buscarNaArvore(Arvore *raiz, char *nome);
+int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido);
 
 // Streams
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
 
 // Programas
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg);
+int removerProgramaDeCateDeST(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg);
 
 #endif
