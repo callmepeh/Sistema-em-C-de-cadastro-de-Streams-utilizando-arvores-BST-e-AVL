@@ -86,11 +86,14 @@ Categorias *buscaCategoria(Categorias *lista, char *nome);
 void mostrarCategoriasDeST(char *nomeST, Arvore *arvST);
 Categorias *removerCategoria(Categorias *lista, Categorias *no);
 int removerCategDeST(Arvore *arvST, char *nomeST, char *nomeCateg);
+Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvore **res);
 
 // Apresentador
 int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador *listaAP);
 int inserirApresentadorOrdenado(Apresentador **listaA, Apresentador *novo);
 Apresentador *criaApresentador(char *nome, char *nomeCA, char *nomeST);
+int *alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
+int *alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 
 // ÁRVORES
 void *preencherDado(TipoDado tipo, Arvore **novoNo);
@@ -105,5 +108,6 @@ void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
 // Programas
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg);
 int removerProgramaDeCateDeST(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg);
+Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP);
 
 #endif
