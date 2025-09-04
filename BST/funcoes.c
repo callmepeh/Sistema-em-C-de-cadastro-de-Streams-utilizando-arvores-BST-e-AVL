@@ -309,10 +309,10 @@ int existeApresentador(Apresentador *lista, char *nome){
 }
 
 Apresentador *buscaApresentador(Apresentador *lista, char *nome){
-    Apresentador *busca = NULL;
-    if(lista){
-        if(strcmp(lista->nome, nome) == 0) busca = lista;
-        busca = existeApresentador(lista->prox, nome);
+    Apresentador *busca = NULL, *atual = lista;
+    while(atual){
+        if(strcmp(atual->nome, nome) == 0) busca = atual;
+        atual = atual->prox;
     }
 
     return busca;
@@ -482,10 +482,9 @@ Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP){
     Arvore *busca = NULL;
     if(programa){
         if(strcmp(programa->dado.PROGRAMA.NomeApresentador, nomeAP) == 0) busca = programa;
-        else{
-            verificaSeExisteApEmST(programa->esq, nomeAP);
-            verificaSeExisteApEmST(programa->dir, nomeAP);
-        }
+        existeApresentadorEmPrograma(programa->esq, nomeAP);
+        existeApresentadorEmPrograma(programa->dir, nomeAP);
+            
     }
 
     return busca;
@@ -507,7 +506,7 @@ Categorias *existeApresentadorEmCategorias(Categorias *lista, char *nomeAP, Arvo
 
 // ALTERAR REMOVENDO O PROGRAMA ANTIGO DO APRESENTADOR
 
-int *alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
+int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *apresentador, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
     // Pega a Stream atual e nova do apresentador
     Arvore *atualST = buscarNaArvore(streams, apresentador->nomeStreamAtual);
@@ -555,7 +554,7 @@ int *alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *a
 
 // ALTERAR COLOCANDO OUTRO APRESENTADR NO PROGRAMA ANTIGO DO APRESENTADOR
 
-int *alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
+int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma){
     int i = 0;
     // Pega a Stream atual e nova do apresentador
     Arvore *atualST = buscarNaArvore(streams, apresentador->nomeStreamAtual);
