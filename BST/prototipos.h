@@ -11,12 +11,12 @@ struct apresentador;
 struct arvore;
 
 // ENUMS
-typedef enum {STREAM, PROGRAMA} TipoDado;
-typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
-typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
-typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
-typedef enum {REMOVER, ALTERAR} ProgramaAtual;
-typedef enum {DOMINGO, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO} DiaSemana;
+typedef enum {STREAM = 1, PROGRAMA} TipoDado;
+typedef enum {NOTICIA = 1, ENTRETENIMENTO, ESPORTE} TipoCategoria;
+typedef enum {DIARIO = 1, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
+typedef enum {AO_VIVO = 1, SOB_DEMANDA} TipoTransmissao;
+typedef enum {REMOVER = 1, ALTERAR} ProgramaAtual;
+typedef enum {DOMINGO = 1, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO} DiaSemana;
 
 // STRUCTS E UNION PARA ÁRVORES
 typedef struct {
@@ -122,5 +122,6 @@ int compararDiaSemana(DiaSemana d1, DiaSemana d2);
 void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia);
 void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia);
 void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia);
+void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomoProg);
 
 #endif

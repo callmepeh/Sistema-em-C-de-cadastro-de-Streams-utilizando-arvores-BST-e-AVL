@@ -83,11 +83,29 @@ void *preencherDado(TipoDado tipo, Arvore **novoNo) {
         printf("Digite o nome do apresentador: ");
         scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.NomeApresentador);
 
+        printf("Digite a data da primeira tranSmissão do programa (DIA | MES | ANO): ");
+        scanf("%d %d %d", &((*novoNo)->dado.PROGRAMA.data.mes), &((*novoNo)->dado.PROGRAMA.data.mes), &((*novoNo)->dado.PROGRAMA.data.ano));
+
+        int op;
+        printf("Digite a periodicidade do programa - (1 - DIÁRIO | 2 - SEMANAL | 3 - QUINZENAL | 4- MENSAL)");
+        scanf("%d", &op);
+        (*novoNo)->dado.PROGRAMA.periodicidade = (Periodicidade) op;
+
+        if (op != DIARIO){ 
+            printf("Digite o dia da semana em que o programa é exibido\n(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO))");
+            (*novoNo)->dado.PROGRAMA.data.diasemana = (DiaSemana) op;
+        }
+
         printf("Digite o horário de início (HH:MM): ");
         scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.HorarioInicio);
 
         printf("Digite o tempo (em minutos): ");
         scanf("%d", &((*novoNo)->dado.PROGRAMA.Tempo));
+
+        printf("Por último, informe o tipo de transissão do programa - (1 - AO VIVO | 2 - SOB DEMANDA)");
+        scanf("%d", &op);
+        (*novoNo)->dado.PROGRAMA.tipotransmissao = (TipoTransmissao) op;
+
     }
 }
 
@@ -751,3 +769,30 @@ void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) 
     }
 }
 
+void mostrarDadosdeumProgramadeumaCategoriadeumaStream(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg){
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
+
+    if (stream){
+        Categorias *categoria = buscaCategoria(stream->dado.STREAM.categorias, nomeCateg);
+        if (categoria){
+            Arvore *prog = buscarNaArvore(categoria->programa, nomeProg);
+            if(prog){
+                printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
+                       prog->dado.PROGRAMA.nome,
+                       prog->dado.PROGRAMA.NomeApresentador,
+                       prog->dado.PROGRAMA.HorarioInicio,
+                       prog->dado.PROGRAMA.Tempo);
+            }
+                else {
+                printf("Programa %s não encontrado na categoria %s da stream %s.\n",
+                       nomeProg, nomeCateg, nomeST);
+                    }
+        } else {
+            printf("Categoria %s não encontrada na stream %s.\n", nomeCateg, nomeST);
+            }   
+    } else {
+        printf("Stream %s não encontrada.\n", nomeST);
+        }
+}
+
+        

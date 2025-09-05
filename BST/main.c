@@ -64,9 +64,12 @@ TipoCategoria retornaTipo(int i){
 int main(){
     setlocale(LC_ALL, "Portuguese");
 
+    //inicialização das nossas estrtuturas 
     Arvore *streams = inicializar();
+    Apresentador *apresentadores = NULL;
+
     int op, opTipoCT, verifica;
-    char nomeCat[50], nomeST[50];
+    char nomeCat[50], nomeST[50], nomeProg[50];
 
     menu();
 
