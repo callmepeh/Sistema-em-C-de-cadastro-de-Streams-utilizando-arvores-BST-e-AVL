@@ -16,8 +16,14 @@ typedef enum {NOTICIA, ENTRETENIMENTO, ESPORTE} TipoCategoria;
 typedef enum {DIARIO, SEMANAL, QUINZENAL, MENSAL} Periodicidade;
 typedef enum {AO_VIVO, SOB_DEMANDA} TipoTransmissao;
 typedef enum {REMOVER, ALTERAR} ProgramaAtual;
+typedef enum {DOMINGO, SEGUNDA, TERCA, QUARTA, QUINTA, SEXTA, SABADO} DiaSemana;
 
 // STRUCTS E UNION PARA ÁRVORES
+typedef struct {
+    int dia, mes, ano;
+    DiaSemana diasemana;
+} Data;
+
 typedef struct stream {
     char nome[50], Site[100];
     struct categorias *categorias;
@@ -28,6 +34,7 @@ typedef struct programa {
     int Tempo;
     Periodicidade periodicidade;
     TipoTransmissao tipotransmissao;
+    Data data;
 } Programa;
 
 typedef union {
@@ -48,10 +55,6 @@ typedef struct categorias {
     struct arvore *programa;
     struct categorias *prox;
 } Categorias;
-
-typedef struct {
-    int dia, mes, ano;
-} Data;
 
 typedef struct streamsAntigas {
     char nome[50];
@@ -105,9 +108,19 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido);
 // Streams
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
 
+// pedro
+void imprimeStreamsPorCategoria(Arvore *arvST, TipoCategoria tipo);
+void mostrarApresentadoresDeStream(Apresentador *lista, char *nomeST);
+
 // Programas
 void mostrarProgsDeCategDeST(char *nomeST, Arvore *arvST, char *nomeCateg);
 int removerProgramaDeCateDeST(Arvore *arvST, char *nomeST, char *nomeCateg, char *nomeProg);
 Arvore *existeApresentadorEmPrograma(Arvore *programa, char *nomeAP);
+
+// pedro
+int compararDiaSemana(DiaSemana d1, DiaSemana d2);
+void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia);
+void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia);
+void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia);
 
 #endif

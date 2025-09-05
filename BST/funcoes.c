@@ -609,3 +609,145 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
     return i;
 }
 
+
+// PEDRO
+
+int compararDiaSemana(DiaSemana d1, DiaSemana d2) {
+    int resultado = 0; // iguais
+    if (d1 < d2) resultado = -1;
+    else if (d1 > d2) resultado = 1;
+    return resultado;
+}
+
+void mostrarProgramasPorDiaSemana(Arvore *raiz, DiaSemana dia) {
+    if(raiz) {
+        mostrarProgramasPorDiaSemana(raiz->esq, dia);
+
+        if(raiz->tipo == PROGRAMA) {
+            if(raiz->dado.PROGRAMA.data.diasemana == dia) {
+                printf("[PROGRAMA] Nome: %s | Apresentador: %s | Dia: %d | Inicio: %s | Tempo: %d\n",
+                    raiz->dado.PROGRAMA.nome,
+                    raiz->dado.PROGRAMA.NomeApresentador,
+                    raiz->dado.PROGRAMA.data.diasemana,
+                    raiz->dado.PROGRAMA.HorarioInicio,
+                    raiz->dado.PROGRAMA.Tempo);
+            }
+        }
+
+        mostrarProgramasPorDiaSemana(raiz->dir, dia);
+    }
+}
+
+void mostrarProgramasDeStreamPorDiaSemanaHorario(Arvore *arvST, char *nomeST, char *horario, DiaSemana dia) {
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
+    if(stream) {
+        Categorias *cat = stream->dado.STREAM.categorias;
+        if(cat) {
+            Categorias *atual = cat;
+            if (strcmp(arvST->dado.PROGRAMA.HorarioInicio, horario) == 0){
+                do {
+                    mostrarProgramasPorDiaSemana(atual->programa, dia);
+                    atual = atual->prox;
+                } while(atual != cat);
+            }
+        }
+    } else {
+        printf("Stream %s não encontrada.\n", nomeST);
+    }
+}
+
+void imprimeStreamsPorCategoria(Arvore *arvST, TipoCategoria tipo) {
+    if(arvST) {
+        imprimeStreamsPorCategoria(arvST->esq, tipo);
+
+        Categorias *lista = arvST->dado.STREAM.categorias;
+        if(lista) {
+            Categorias *atual = lista;
+            int achou = 0;
+
+            do {
+                if(atual->tipo == tipo) {
+                    achou = 1;
+                }
+                atual = atual->prox;
+            } while(atual != lista && !achou);
+
+            if(achou) {
+                printf("[STREAM] Nome: %s | Site: %s\n",
+                    arvST->dado.STREAM.nome,
+                    arvST->dado.STREAM.Site);
+            }
+        }
+
+        imprimeStreamsPorCategoria(arvST->dir, tipo);
+    }
+}
+
+void mostrarProgramasDeCategoriaPorDiaSemana(Arvore *arvST, char *nomeST, char *nomeCateg, DiaSemana dia) {
+    Arvore *stream = buscarNaArvore(arvST, nomeST);
+    if(stream) {
+        Categorias *categoria = buscaCategoria(stream->dado.STREAM.categorias, nomeCateg);
+        if(categoria) {
+            mostrarProgramasPorDiaSemana(categoria->programa, dia);
+        } else {
+            printf("Categoria %s não encontrada na stream %s.\n", nomeCateg, nomeST);
+        }
+    } else {
+        printf("Stream %s não encontrada.\n", nomeST);
+    }
+}
+
+void mostrarApresentadoresDeStream(Apresentador *lista, char *nomeST) {
+    if(!lista) {
+        printf("Nenhum apresentador cadastrado.\n");
+        return;
+    }
+
+    deixaMaiuscula(nomeST);  
+
+    Apresentador *atual = lista;
+    int encontrou = 0;
+
+    while(atual) {
+        if(strcmp(atual->nomeStreamAtual, nomeST) == 0) {
+            printf("[APRESENTADOR] Nome: %s | Categoria: %s | Stream Atual: %s\n",
+                   atual->nome,
+                   atual->nomeCategoriaAtual,
+                   atual->nomeStreamAtual);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+
+    if(!encontrou) {
+        printf("Nenhum apresentador encontrado na stream %s.\n", nomeST);
+    }
+}
+
+void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) {
+    if(!lista) {
+        printf("Nenhum apresentador cadastrado.\n");
+        return;
+    }
+
+    deixaMaiuscula(nomeCategoria);  // padroniza entrada
+
+    Apresentador *atual = lista;
+    int encontrou = 0;
+
+    while(atual) {
+        if(strcmp(atual->nomeCategoriaAtual, nomeCategoria) == 0) {
+            printf("[APRESENTADOR] Nome: %s | Categoria: %s | Stream Atual: %s\n",
+                   atual->nome,
+                   atual->nomeCategoriaAtual,
+                   atual->nomeStreamAtual);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+
+    if(!encontrou) {
+        printf("Nenhum apresentador encontrado na categoria %s.\n", nomeCategoria);
+    }
+}
+
