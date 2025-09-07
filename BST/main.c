@@ -70,12 +70,14 @@ int main(){
 
     int op, opTipoCT, verifica;
     char nomeCat[50], nomeST[50], nomeProg[50];
+    char nomeAp[50], nomeNovaST[50], categoriaNovoProg[50];
+    Arvore *novaArv;
 
     menu();
 
     printf("\nOpção: "); scanf("%d", &op);
     switch (op){
-        case 1:
+        case 1: // cadastrar stream
             Arvore *nova;
             if(!(nova = alocar(nova, STREAM))) exit(1);
             preencherDado(STREAM, &nova);
@@ -85,7 +87,8 @@ int main(){
             else printf("Essa stream já existe na árvore, logo não foi possível inserir.\n");
             
             break;
-        case 2:
+
+        case 2:  // cadastrar categoria
             menuTipoCatgoria();
             printf("\nOpção: "); scanf("%d", &opTipoCT);
             if(op > 0 && op < 4){
@@ -104,10 +107,34 @@ int main(){
 
             }else printf("Opção de categoria inválida.\n");
             break;
-        case 3:
-            break;
-        case 4:
-            break;
+
+        case 3: // cadastrar programa
+            printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
+            printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+
+            if ((novaArv = alocar(novaArv, PROGRAMA))) {
+                preencherDado(PROGRAMA, &novaArv, apresentadores, nomeST, nomeCat);
+                Arvore *stream = buscarNaArvore(streams, nomeST);
+                if (stream) {
+                    Categorias *cat = buscaCategoria(stream->dado.STREAM.categorias, nomeCat);
+                    if (cat) {
+                        verifica = inserirArvBin(&(cat->programa), novaArv);
+                        printf(verifica ? "Programa cadastrado com sucesso!\n" :
+                                            "Não foi possível cadastrar o programa.\n");
+                    } else {
+                        printf("Categoria não encontrada na stream.\n");
+                    }
+                }
+            } break;
+        case 4: // cadastrar apresentador
+            printf("Nome do apresentador: "); scanf(" %[^\n]", nomeAp);
+            printf("Nome da categoria atual: "); scanf(" %[^\n]", nomeCat);
+            printf("Nome da stream atual: "); scanf(" %[^\n]", nomeST);
+            Apresentador *novoAp = criaApresentador(nomeAp, nomeCat, nomeST);
+            verifica = cadastrarApresentador(novoAp, streams, apresentadores);
+            printf(verifica ? "Apresentador cadastrado com sucesso!\n" :
+                                "Não foi possível cadastrar apresentador.\n");
+        break;
         case 5:
             break;
         case 6:

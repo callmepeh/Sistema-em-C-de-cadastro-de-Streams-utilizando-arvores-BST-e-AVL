@@ -80,6 +80,7 @@ Arvore *soUmFilho(Arvore *no);
 Arvore *maiorAhEsquerda(Arvore *no);
 int existeCategoria(Categorias *lista, char *nome);
 int existeApresentador(Apresentador *lista, char *nome);
+int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria);
 
 // LISTAS
 // Categorias
@@ -99,7 +100,7 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
 int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, Apresentador *lista, Apresentador *apresentador, Apresentador *substituto, char *nomeNovaStream, Arvore *novoPrograma, char *categoriaNovoPrograma);
 
 // ÁRVORES
-void *preencherDado(TipoDado tipo, Arvore **novoNo);
+void *preencherDado(TipoDado tipo, Arvore **novoNo, Apresentador *listaAP, char*nomeSt, char *nomeCat);
 int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
 Arvore* buscarNaArvore(Arvore *raiz, char *nome);

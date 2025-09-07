@@ -59,8 +59,31 @@ Arvore *maiorAhEsquerda(Arvore *no){
     return no;
 }
 
+int validarApresentador(Apresentador *lista, char *nomeAp, char *nomeStream, char *nomeCategoria) {
+    deixaMaiuscula(nomeAp);  // padroniza comparação
+    Apresentador *ap = buscaApresentador(lista, nomeAp);
+
+    if (!ap) {
+        printf("Erro: Apresentador %s não cadastrado.\n", nomeAp);
+        return 0;
+    }
+
+    if (strcmp(ap->nomeStreamAtual, nomeStream) != 0) {
+        printf("Erro: Apresentador %s não trabalha na stream %s.\n", nomeAp, nomeStream);
+        return 0;
+    }
+
+    if (strcmp(ap->nomeCategoriaAtual, nomeCategoria) != 0) {
+        printf("Erro: Apresentador %s não pertence à categoria %s.\n", nomeAp, nomeCategoria);
+        return 0;
+    }
+
+    return 1; // válido
+}
+
+
 // ÁRVORE
-void *preencherDado(TipoDado tipo, Arvore **novoNo) {
+void *preencherDado(TipoDado tipo, Arvore **novoNo, Apresentador *listaAP, char*nomeSt, char *nomeCat) {
     char auxi[50];
 
     if (tipo == STREAM) {
@@ -82,6 +105,10 @@ void *preencherDado(TipoDado tipo, Arvore **novoNo) {
 
         printf("Digite o nome do apresentador: ");
         scanf(" %[^\n]", (*novoNo)->dado.PROGRAMA.NomeApresentador);
+        deixaMaiuscula((*novoNo)->dado.PROGRAMA.NomeApresentador);
+        if (!validarApresentador(listaAP,(*novoNo)->dado.PROGRAMA.NomeApresentador, nomeSt, nomeCat)) {
+        return NULL; 
+}
 
         printf("Digite a data da primeira tranSmissão do programa (DIA | MES | ANO): ");
         scanf("%d %d %d", &((*novoNo)->dado.PROGRAMA.data.mes), &((*novoNo)->dado.PROGRAMA.data.mes), &((*novoNo)->dado.PROGRAMA.data.ano));
