@@ -45,15 +45,9 @@ typedef union {
 typedef struct arvore{
     TipoDado tipo;
     DadoUnion dado;
+    int alt;
     struct arvore *esq, *dir;
 }Arvore; 
-
-typedef struct ArvoreAVL{
-    TipoDado tipo;
-    DadoUnion dado;
-    int alt;
-    struct arvoreAVL *esq, *dir;
-}ArvoreAVL; 
 
 // STRUCTS PARA LISTAS E VETOR
 typedef struct categorias {
@@ -119,6 +113,13 @@ int inserirArvBin(Arvore **R, Arvore *novono);
 void imprimirArvore(Arvore *raiz);
 Arvore* buscarNaArvore(Arvore *raiz, char *nome);
 int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido);
+
+//ÁRVORES AVL
+int fatorBalanceamento(Arvore *no);
+void rotacionaEsquerda(Arvore **no);
+void rotacionaDireita(Arvore **no);
+void balanceamento(Arvore **no);
+void atualizaAltura(Arvore **raiz);
 
 // Streams
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);
