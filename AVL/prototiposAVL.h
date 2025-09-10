@@ -120,6 +120,7 @@ void rotacionaEsquerda(Arvore **no);
 void rotacionaDireita(Arvore **no);
 void balanceamento(Arvore **no);
 void atualizaAltura(Arvore **raiz);
+void atualizaAltura(Arvore *raiz)
 
 // Streams
 void mostrarStsQueTemCategoria(char *nomeCateg, Arvore *arvST);

@@ -200,7 +200,10 @@ int inserirArvBin(Arvore **R, Arvore *novono) {
         if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) < 0) inseriu = inserirArvBin(&((*R)->esq), novono);
         else if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) > 0) inseriu = inserirArvBin(&((*R)->dir), novono);
     }
-    
+        
+    atualizaAltura(*R);
+    balanceamento(R);
+
     return inseriu;
 }
 
@@ -867,7 +870,6 @@ void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) 
 }
 
 
-
 // funções da AVL 
 
 int retornalt(Arvore *no){
@@ -914,6 +916,21 @@ void balanceamento(Arvore **no){
         if ((fatorBalanceamento((*no)->esq)) < 0){
             rotacionaDireita(&(*no)->esq);
         rotacionaEsquerda(no)
+            }
         }
     }
 }
+
+void atualizaAltura(Arvore *raiz) {
+    if (raiz) {
+        if (raiz->esq == NULL && raiz->dir == NULL) raiz->alt = 0;
+        else if (raiz->dir == NULL) raiz->alt = raiz->esq->alt + 1;
+        else if (raiz->esq == NULL) raiz->alt = raiz->dir->alt + 1;
+        else {
+            if (raiz->esq->alt > raiz->dir->alt) raiz->alt = raiz->esq->alt + 1;
+            else raiz->alt = raiz->dir->alt + 1;
+        }
+    }
+}
+
+
