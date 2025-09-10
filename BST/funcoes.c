@@ -865,3 +865,55 @@ void mostrarApresentadoresDeCategoria(Apresentador *lista, char *nomeCategoria) 
 
     
 }
+
+
+
+// funções da AVL 
+
+int retornalt(ArvoreAVL *no){
+    int alt = -1;
+    if (no){
+        no->alt;
+    }
+    return (alt)
+}
+
+int fatorBalanceamento(ArvoreAVL *no){
+    int fb = 0;
+    if (no){
+        fb = altura(no->esq) - altura(no->dir);
+    }
+    return (fb);
+}
+
+void rotacionaEsquerda(ArvoreAVL **no){
+    ArvoreAVL *auxi;
+    auxi = (*no)->dir;
+    (*no)->dir = auxi->esq;
+    auxi->esq = *no;
+    *no = auxi;
+}
+
+void rotacionaDireita(ArvoreAVL **no){
+    ArvoreAVL *auxi;
+    auxi = (*no)->esq;
+    (*no)->esq = auxi->dir;
+    auxi->dir = *no;
+    *no = auxi;
+}
+
+void balanceamento(ArvoreAVL **no){
+    int fb = fatorBalanceamento(*no);
+
+    if (fb == 2){
+        if ((fatorBalanceamento((*no)->esq)) < 0){
+            rotacionaEsquerda(&(*no)->esq);
+        rotacionaDireita(no)
+        }
+    else if (fb == -2){
+        if ((fatorBalanceamento((*no)->esq)) < 0){
+            rotacionaDireita(&(*no)->esq);
+        rotacionaEsquerda(no)
+        }
+    }
+}
