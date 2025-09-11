@@ -180,13 +180,19 @@ int main(){
                 }else printf("\nStream não encontrada!");
                 break;   
             case 5:
+                printf("--TODAS AS STREAMS CADASTRADAS--\n\n");
+
                 imprimirArvore(streams);
                 break;
             case 6:
+                printf("--TODAS AS STREAMS CADASTRADAS NA CATEGORIA %S--\n\n");
+
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarStsQueTemCategoria(nomeCat, streams);
                 break;
             case 7:
+                printf("--TODAS AS STREAMS DO TIPO DE CATEGORIA--\n\n ");
+
                 menuTipoCatgoria();
                 int opCat;
                 printf("Opção: "); scanf("%d", &opCat);
@@ -196,15 +202,21 @@ int main(){
                 }else printf("\nOpção de categoria inválida!");
                 break;
             case 8:
+                printf("--TODAS AS CATEGORIAS DE UMA STREAM--\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarCategoriasDeST(nomeST, streams);
                 break;
             case 9:
+                printf("--TODOS OS PROGRAMAS DE UMA CATEGORIA DE UMA STREAM--\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarProgsDeCategDeST(nomeST, streams, nomeCat);
                 break;
             case 10:
+                printf("--TODOS OS PROGRAMAS DE UMS STREAM POR DIA E HORARIO--\n\n");
+
                 menuDiaSemana();
                 printf("\nOpção: "); scanf("%d", &opDia);
                 if(opDia > 0 && opDia < 8){
@@ -217,6 +229,8 @@ int main(){
                 }else printf("\nOpção de dia inválida!");
                 break;
             case 11:
+                printf("--TODOS OS PROGRAMAS DE UM DETERMINADO DIA DE UMA CATEGORIA DE UMA STREAM--\n\n");
+
                 menuDiaSemana();
                 printf("\nOpção: "); scanf("%d", &opDia);
                 if(opDia > 0 && opDia < 8){
@@ -228,6 +242,8 @@ int main(){
                 }else printf("Opção de dia inválida!\n");
                 break;
             case 12:
+                printf("--DADOS DE UM PROGRAMA DE UMA CATEGORIA DE UMA STREAM--\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
@@ -235,14 +251,20 @@ int main(){
                 mostrarDadosdeumProgramadeumaCategoriadeumaStream(streams, nomeST, nomeCat, nomePG);
                 break;
             case 13:
+                printf("--TODOS OS APRESENTADORES DE UMA STREAM--\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarApresentadoresDeStream(apresentadores, nomeST);
                 break;
             case 14:
+                printf("--TODOS OS APRESENTADORES DE UMA CATEGORIA INDEPENDENTE DA STREAM QUE ELE TRABALHA--\n\n");
+
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarApresentadoresDeCategoria(apresentadores, nomeCat);
                 break;
             case 15:
+                printf("REMOVENDO UM PROGRAMA DE UMA CATEGORIA DE UMA STREAM\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
@@ -252,6 +274,8 @@ int main(){
                 else printf("\nNão foi possível remover!");
                 break;
             case 16:
+                printf("REMOVENDO UMA  CATEGORIA DE UMA STREAM\n\n");
+
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
 
@@ -260,6 +284,8 @@ int main(){
                 else printf("\nNão foi possível remover!");
                 break;
             case 17:
+                printf("ALTERANDO A STREAM DE UM APRESENTNADOR\n\n");
+
                 menuAltAP();
                 int opAlt;
                 printf("\nOpção: "); scanf("%d", &opAlt);
