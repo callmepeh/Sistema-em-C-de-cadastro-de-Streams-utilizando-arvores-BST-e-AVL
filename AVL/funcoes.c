@@ -151,6 +151,7 @@ Apresentador *buscaApresentador(Apresentador *lista, char *nome){
 
 int existeCategoria(Categorias *lista, char *nome){
     int i = 0;
+    if(!lista || !nome) return i;
     deixaMaiuscula(nome);
     Categorias *cabeca = lista;
     do{

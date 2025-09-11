@@ -185,7 +185,7 @@ int main(){
                 imprimirArvore(streams);
                 break;
             case 6:
-                printf("--TODAS AS STREAMS CADASTRADAS NA CATEGORIA %S--\n\n");
+                printf("--TODAS AS STREAMS CADASTRADAS NA CATEGORIA--\n\n");
 
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarStsQueTemCategoria(nomeCat, streams);
