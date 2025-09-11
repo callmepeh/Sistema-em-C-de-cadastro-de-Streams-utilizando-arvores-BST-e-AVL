@@ -227,10 +227,10 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
 
         int opDia = 0;
         if (op != DIARIO){ 
-            while(opDia < 1 || opDia > 8){
+            while(opDia < 1 || opDia > 7){
                 printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
                 printf("Digite o dia da semana em que o programa é exibido: ");
-                scanf("%d", &op); printf("\n"); 
+                scanf("%d", &opDia); printf("\n"); 
             }
             
             novoNo->dado.PROGRAMA.data.diasemana = (DiaSemana) opDia;
