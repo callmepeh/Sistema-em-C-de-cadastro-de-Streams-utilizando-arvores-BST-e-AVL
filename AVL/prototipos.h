@@ -45,6 +45,7 @@ typedef union {
 typedef struct arvore{
     TipoDado tipo;
     DadoUnion dado;
+    int alt;
     struct arvore *esq, *dir;
 }Arvore; 
 
@@ -67,6 +68,14 @@ typedef struct apresentador {
     int quantidadeStAntigas;
     struct apresentador *prox, *ant;
 } Apresentador;
+
+// BALANCEAMENTO
+
+int fatorBalanceamento(Arvore *no);
+void rotacionaEsquerda(Arvore **no);
+void rotacionaDireita(Arvore **no);
+void balanceamento(Arvore **no);
+void atualizaAltura(Arvore **raiz);
 
 // UTILITÁRIOS
 Arvore *inicializar();

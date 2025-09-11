@@ -6,6 +6,58 @@
 
 #include "prototipos.h"
 
+// BALANCEAMENTO
+
+int fatorBalanceamento(Arvore *no){
+    int fb;
+    if(no->esq == NULL & no->dir == NULL) fb = 0;
+    else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
+    else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
+    else fb = no->esq->alt - no->dir->alt;
+
+    return (fb);
+}
+
+void rotacionaEsquerda(Arvore **no){
+    Arvore *auxi;
+    auxi = (*no)->dir;
+    (*no)->dir = auxi->esq;
+    auxi->esq = *no;
+    *no = auxi;
+}
+
+void rotacionaDireita(Arvore **no){
+    Arvore *auxi;
+    auxi = (*no)->esq;
+    (*no)->esq = auxi->dir;
+    auxi->dir = *no;
+    *no = auxi;
+}
+
+void balanceamento(Arvore **no){
+    int fb = fatorBalanceamento(*no);
+
+    if (fb == 2){
+        if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaEsquerda(&(*no)->esq);
+        rotacionaDireita(no);
+    }else if (fb == -2){
+        if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaDireita(&(*no)->esq);
+        rotacionaEsquerda(no);
+    }
+}
+
+void atualizaAltura(Arvore **raiz) {
+    if (*raiz) {
+        if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
+        else if ((*raiz)->dir == NULL && (*raiz)->esq) (*raiz)->alt = (*raiz)->esq->alt + 1;
+        else if ((*raiz)->esq == NULL && (*raiz)->dir) (*raiz)->alt = (*raiz)->dir->alt + 1;
+        else {
+            if ((*raiz)->esq->alt > (*raiz)->dir->alt) (*raiz)->alt = (*raiz)->esq->alt + 1;
+            else (*raiz)->alt = (*raiz)->dir->alt + 1;
+        }
+    }
+}
+
 // UTILITÁRIOS
 Arvore *inicializar(){
     return NULL;
@@ -15,6 +67,7 @@ Arvore *alocar(TipoDado tipo){
     Arvore *arv = (Arvore *)malloc(sizeof(Arvore));
     if(!arv) return NULL;
     arv->tipo = tipo;
+    arv->alt = 0;
     arv->esq = arv->dir = NULL;
     return arv;
 }
@@ -210,6 +263,9 @@ int inserirArvBin(Arvore **R, Arvore *novono) {
         if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) < 0) inseriu = inserirArvBin(&((*R)->esq), novono);
         else if (strcmp(novono->dado.STREAM.nome, (*R)->dado.STREAM.nome) > 0) inseriu = inserirArvBin(&((*R)->dir), novono);
     }
+
+    balanceamento(R);
+    atualizaAltura(R);
     
     return inseriu;
 }
@@ -272,6 +328,11 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
                 }
             }
         }
+    }
+
+    if(*arvore && remover){
+        balanceamento(arvore);
+        atualizaAltura(arvore);
     }
 
     return remover;
