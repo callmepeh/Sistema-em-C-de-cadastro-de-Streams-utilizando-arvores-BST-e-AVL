@@ -280,7 +280,7 @@ int inserirArvBin(Arvore **R, Arvore *novono) {
 void imprimirArvore(Arvore *raiz) {
     if(raiz){
         imprimirArvore(raiz->esq);
-        if (raiz->tipo == STREAM) printf("[STREAM] Nome: %s | Site: %s\n", raiz->dado.STREAM.nome, raiz->dado.STREAM.Site);
+        if (raiz->tipo == STREAM) printf("[STREAM] Nome: %s | Site: %s\n | Alt: %d\n | Fb: %d\n", raiz->dado.STREAM.nome, raiz->dado.STREAM.Site, raiz->alt, fatorBalanceamento(raiz));
         else {
             printf("[PROGRAMA] Nome: %s | Apresentador: %s | Inicio: %s | Tempo: %d\n",
                 raiz->dado.PROGRAMA.nome,

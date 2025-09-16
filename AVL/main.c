@@ -8,8 +8,8 @@ void menu(){
     printf("--- MENU ---\n");
     printf("1 - Cadastrar stream\n");
     printf("2 - Cadastrar categoria\n");
-    printf("3 - Cadastrar programa\n");
-    printf("4 - Cadastrar apresentador\n");
+    printf("3 - Cadastrar apresentadores de STREAM\n");
+    printf("4 - Cadastrar programa\n");
 
     printf("\n");
 
@@ -86,6 +86,7 @@ int main(){
         printf("\n");
         switch (op){
             case 1:
+                printf("--CADASTRANDO STREAM--\n\n");
                 Arvore *nova = alocar(STREAM);
                 if(!nova) exit(1);
                 preencherDado(STREAM, nova);
@@ -97,6 +98,7 @@ int main(){
                 
                 break;
             case 2:
+                printf("--CADASTRANDO CATEGORIA--\n\n");
                 menuTipoCatgoria();
                 printf("\nOpção: "); scanf("%d", &opTipoCT); printf("\n");
                 if(opTipoCT > 0 && opTipoCT < 4){
@@ -116,6 +118,29 @@ int main(){
                 }else printf("\nOpção de categoria inválida.");
                 break;
             case 3:
+                printf("--CADASTRANDO APRESENTADORES DA STREAM--\n\n");
+
+                int R;
+                printf("Digite o nome da Stream que deseja cadastrar os apresentadores: "); scanf(" %[^\n]", nomeST);
+                
+                do{
+                    printf("Nome do apresentador: "); scanf(" %[^\n]", nomeAP);
+                    printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
+
+                    Apresentador *novoAP = alocarApresentador();
+                    if(!novoAP) exit(1); 
+                    novoAP = criaApresentador(nomeAP, nomeCat, nomeST);
+                    if(novoAP){
+                        verifica = cadastrarApresentador(novoAP, streams, &apresentadores);
+                        if(verifica) printf("\nApresentador adicionado a lista com sucesso!");
+                        else printf("\nNão foi possível adicionar esse apresentador a lista!");
+                    }else printf("\nErro ao criar apresentador!");
+                    printf("Você deseja cadastrar outro apresentador na stream %s? ( 0 - não | 1 - sim)", nomeST);
+                    scanf("%d", &R);
+                }while(R == 1);
+                break;
+            case 4:
+                printf("--CADASTRANDO PROGRAMA--\n\n");
                 printf("Stream do programa: "); scanf(" %[^\n]", nomeST);
                 Arvore *stream = buscarNaArvore(streams, nomeST);
 
@@ -152,28 +177,17 @@ int main(){
                 }else printf("\nStream não encontrada!");
                 
                 break;
-            case 4:
-                printf("Nome do apresentador: "); scanf(" %[^\n]", nomeAP);
-                printf("Stream do apresentador: "); scanf(" %[^\n]", nomeST);
-                printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
-
-                Apresentador *novoAP = alocarApresentador();
-                if(!novoAP) exit(1); 
-                novoAP = criaApresentador(nomeAP, nomeCat, nomeST);
-                if(novoAP){
-                    verifica = cadastrarApresentador(novoAP, streams, &apresentadores);
-                    if(verifica) printf("\nApresentador adicionado a lista com sucesso!");
-                    else printf("\nNão foi possível adicionar esse apresentador a lista!");
-                }else printf("\nErro ao criar apresentador!");
-                break;
             case 5:
+                printf("--MOSTRANDO TODAS AS STREAMS CADASTRADAS--\n\n");
                 imprimirArvore(streams);
                 break;
             case 6:
+                printf("--MOSTRANDO TODAS AS STREAMS QUE TEM UMA CATEGORIA--\n\n");
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarStsQueTemCategoria(nomeCat, streams);
                 break;
             case 7:
+                printf("--MOSTRANDO TODAS AS STREAMS QUE TEM UM DETERMINADO TIPO DE CATEGORIA--\n\n");
                 menuTipoCatgoria();
                 int opCat;
                 printf("Opção: "); scanf("%d", &opCat);
@@ -183,15 +197,18 @@ int main(){
                 }else printf("\nOpção de categoria inválida!");
                 break;
             case 8:
+                printf("--MOSTRANDO CATEGORIAS DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarCategoriasDeST(nomeST, streams);
                 break;
             case 9:
+                printf("--MOSTRANDO PROGRAMAS DE UMA CATEGORIA DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarProgsDeCategDeST(nomeST, streams, nomeCat);
                 break;
             case 10:
+                printf("--MOSTRANDO PROGRAMAS DE STREAM POR DIA E HORÁRIO--\n\n");
                 menuDiaSemana();
                 printf("\nOpção: "); scanf("%d", &opDia);
                 if(opDia > 0 && opDia < 8){
@@ -204,6 +221,7 @@ int main(){
                 }else printf("\nOpção de dia inválida!");
                 break;
             case 11:
+                printf("--MOSTRANDO PROGRAMAS DE UMA CATEGORIA DE UMA STREAM POR DIA--\n\n");
                 menuDiaSemana();
                 printf("\nOpção: "); scanf("%d", &opDia);
                 if(opDia > 0 && opDia < 8){
@@ -215,6 +233,7 @@ int main(){
                 }else printf("Opção de dia inválida!\n");
                 break;
             case 12:
+                printf("--MOSTRANDO DADOS DE UM PROGRAMA DE UMA CATEGORIA DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
@@ -222,14 +241,17 @@ int main(){
                 mostrarDadosdeumProgramadeumaCategoriadeumaStream(streams, nomeST, nomeCat, nomePG);
                 break;
             case 13:
+                printf("--MOSTRANDO APRESENTADORES DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 mostrarApresentadoresDeStream(apresentadores, nomeST);
                 break;
             case 14:
+                printf("--MOSTRANDO APRESENTADORES DE UMA CATEGORIA--\n\n");
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 mostrarApresentadoresDeCategoria(apresentadores, nomeCat);
                 break;
             case 15:
+                printf("--REMOVENDO PROGRAMA DE UMA CATEGORIA DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
                 printf("Nome do programa: "); scanf(" %[^\n]", nomePG);
@@ -239,6 +261,7 @@ int main(){
                 else printf("\nNão foi possível remover!");
                 break;
             case 16:
+                printf("--REMOVENDO CATEGORIA DE UMA STREAM--\n\n");
                 printf("Nome da stream: "); scanf(" %[^\n]", nomeST);
                 printf("Nome da categoria: "); scanf(" %[^\n]", nomeCat);
 
@@ -247,6 +270,7 @@ int main(){
                 else printf("\nNão foi possível remover!");
                 break;
             case 17:
+                printf("--ALTERANDO STREAM DE UM APRESENTADOR--\n\n");
                 menuAltAP();
                 int opAlt;
                 printf("\nOpção: "); scanf("%d", &opAlt);
@@ -285,6 +309,7 @@ int main(){
                 } else printf("\nOpção inválida!\n");
                 break;
             case 0:
+                printf("Saindo...\n");
                 parada = 0;
                 break;
 
