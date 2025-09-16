@@ -9,12 +9,13 @@
 // BALANCEAMENTO
 
 int fatorBalanceamento(Arvore *no){
-    int fb;
-    if(no->esq == NULL & no->dir == NULL) fb = 0;
-    else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
-    else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
-    else fb = no->esq->alt - no->dir->alt;
-
+    int fb = 0;
+    if (no != NULL){
+        if(no->esq == NULL && no->dir == NULL) fb = 0;
+        else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
+        else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
+        else fb = no->esq->alt - no->dir->alt;
+    }
     return (fb);
 }
 
@@ -41,7 +42,7 @@ void balanceamento(Arvore **no){
         if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaEsquerda(&(*no)->esq);
         rotacionaDireita(no);
     }else if (fb == -2){
-        if ((fatorBalanceamento((*no)->esq)) < 0) rotacionaDireita(&(*no)->esq);
+        if ((fatorBalanceamento((*no)->dir)) > 0) rotacionaDireita(&(*no)->dir);
         rotacionaEsquerda(no);
     }
 }
@@ -120,9 +121,14 @@ Arvore *soUmFilho(Arvore *no){
     return filho;
 }
 
-Arvore *maiorAhEsquerda(Arvore *no){
-    if(no->dir) maiorAhEsquerda(no->dir);
-    return no;
+Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
+    Arvore *busca = no->esq;
+    *paiMaior = no;
+    while(busca->dir){
+        paiMaior = busca;
+        busca = busca->dir;
+    }
+    return (*paiMaior)->dir;
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -315,19 +321,23 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
             if(ehFolha(*arvore)){
                 auxi = *arvore;
                 *arvore = NULL;
-                free(auxi);
             }else{
                 Arvore *filho;
                 if((filho = soUmFilho(*arvore))){
                     auxi = *arvore;
                     *arvore = filho;
-                    free(auxi);
                 }else{
-                    auxi = maiorAhEsquerda((*arvore)->esq);
-                    (*arvore)->dado = auxi->dado;
-                    removerDaArvore(&((*arvore)->esq), auxi);
+                    Arvore *paiMaior = inicializar(), *noMaior = inicializar();
+                    noMaior = maiorAhEsquerda(*arvore, &paiMaior);
+                    (*arvore)->dado = noMaior->dado;
+                    paiMaior->dir = noMaior->esq;
+                    auxi = noMaior;
+                    //auxi = maiorAhEsquerda((*arvore)->esq);
+                    //(*arvore)->dado = auxi->dado;
+                    //removerDaArvore(&((*arvore)->esq), auxi);
                 }
             }
+            free(auxi);
         }
     }
 
@@ -721,7 +731,6 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
         // Verifica se o apresentador já está na nova Stream
         Categorias *CTnova = novaST->dado.STREAM.categorias;
         Arvore *res = NULL;
-        Categorias *cat = existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
         // res = o programa do apresentador ou nulo | cat = a categoria que guarda a árvore de programas do programa em res
 
         // Só começa a alterar se res == NULL
@@ -739,7 +748,8 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     // EcerraST = coloca a data de término na Stream no vetor de Streams antigas
                     encerraST(apresentador);
                     res = NULL;
-                    cat = existeApresentadorEmCategorias(atualST->dado.STREAM.categorias, apresentador->nome, &res); 
+                    existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
+ 
 
                     // Substitui apresentador do programa atual da stream
                     strcpy(res->dado.PROGRAMA.NomeApresentador, substituto->nome);

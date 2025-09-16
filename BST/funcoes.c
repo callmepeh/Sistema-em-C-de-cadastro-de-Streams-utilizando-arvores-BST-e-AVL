@@ -67,9 +67,14 @@ Arvore *soUmFilho(Arvore *no){
     return filho;
 }
 
-Arvore *maiorAhEsquerda(Arvore *no){
-    if(no->dir) maiorAhEsquerda(no->dir);
-    return no;
+Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
+    Arvore *busca = no->esq;
+    *paiMaior = no;
+    while(busca->dir){
+        paiMaior = busca;
+        busca = busca->dir;
+    }
+    return (*paiMaior)->dir;
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -259,19 +264,23 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
             if(ehFolha(*arvore)){
                 auxi = *arvore;
                 *arvore = NULL;
-                free(auxi);
             }else{
                 Arvore *filho;
                 if((filho = soUmFilho(*arvore))){
                     auxi = *arvore;
                     *arvore = filho;
-                    free(auxi);
                 }else{
-                    auxi = maiorAhEsquerda((*arvore)->esq);
-                    (*arvore)->dado = auxi->dado;
-                    removerDaArvore(&((*arvore)->esq), auxi);
+                    Arvore *paiMaior = inicializar(), *noMaior = inicializar();
+                    noMaior = maiorAhEsquerda(*arvore, &paiMaior);
+                    (*arvore)->dado = noMaior->dado;
+                    paiMaior->dir = noMaior->esq;
+                    auxi = noMaior;
+                    //auxi = maiorAhEsquerda((*arvore)->esq);
+                    //(*arvore)->dado = auxi->dado;
+                    //removerDaArvore(&((*arvore)->esq), auxi);
                 }
             }
+            free(auxi);
         }
     }
 
