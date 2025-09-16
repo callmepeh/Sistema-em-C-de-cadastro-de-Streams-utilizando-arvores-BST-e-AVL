@@ -8,14 +8,25 @@
 
 // BALANCEAMENTO
 
-int fatorBalanceamento(Arvore *no){
-    int fb = 0;
-    if (no != NULL){
-        if(no->esq == NULL && no->dir == NULL) fb = 0;
-        else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
-        else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
-        else fb = no->esq->alt - no->dir->alt;
+void atualizaAltura(Arvore **raiz) {
+    if (*raiz) {
+        if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
+        else if ((*raiz)->dir == NULL && (*raiz)->esq) (*raiz)->alt = (*raiz)->esq->alt + 1;
+        else if ((*raiz)->esq == NULL && (*raiz)->dir) (*raiz)->alt = (*raiz)->dir->alt + 1;
+        else {
+            if ((*raiz)->esq->alt > (*raiz)->dir->alt) (*raiz)->alt = (*raiz)->esq->alt + 1;
+            else (*raiz)->alt = (*raiz)->dir->alt + 1;
+        }
     }
+}
+
+int fatorBalanceamento(Arvore *no){
+    int fb;
+    if(no->esq == NULL && no->dir == NULL) fb = 0;
+    else if(no->esq == NULL && no->dir) fb = -1 - no->dir->alt;
+    else if(no->esq && no->dir == NULL) fb = no->esq->alt - (-1);
+    else fb = no->esq->alt - no->dir->alt;
+
     return (fb);
 }
 
@@ -44,18 +55,6 @@ void balanceamento(Arvore **no){
     }else if (fb == -2){
         if ((fatorBalanceamento((*no)->dir)) > 0) rotacionaDireita(&(*no)->dir);
         rotacionaEsquerda(no);
-    }
-}
-
-void atualizaAltura(Arvore **raiz) {
-    if (*raiz) {
-        if ((*raiz)->esq == NULL && (*raiz)->dir == NULL) (*raiz)->alt = 0;
-        else if ((*raiz)->dir == NULL && (*raiz)->esq) (*raiz)->alt = (*raiz)->esq->alt + 1;
-        else if ((*raiz)->esq == NULL && (*raiz)->dir) (*raiz)->alt = (*raiz)->dir->alt + 1;
-        else {
-            if ((*raiz)->esq->alt > (*raiz)->dir->alt) (*raiz)->alt = (*raiz)->esq->alt + 1;
-            else (*raiz)->alt = (*raiz)->dir->alt + 1;
-        }
     }
 }
 
@@ -125,10 +124,12 @@ Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
     Arvore *busca = no->esq;
     *paiMaior = no;
     while(busca->dir){
-        paiMaior = busca;
+        *paiMaior = busca;
         busca = busca->dir;
     }
     return (*paiMaior)->dir;
+    //if(no->dir) maiorAhEsquerda(no->dir);
+    //return no;
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -157,7 +158,6 @@ Apresentador *buscaApresentador(Apresentador *lista, char *nome){
 
 int existeCategoria(Categorias *lista, char *nome){
     int i = 0;
-    if(!lista || !nome) return i;
     deixaMaiuscula(nome);
     Categorias *cabeca = lista;
     do{
@@ -234,7 +234,7 @@ void preencherDado(TipoDado tipo, Arvore *novoNo){
 
         int opDia = 0;
         if (op != DIARIO){ 
-            while(opDia < 1 || opDia > 7){
+            while(opDia < 1 || opDia > 8){
                 printf("(1 - DOMINGO | 2 - SEGUNDA | 3 - TERÇA | 4- QUARTA | 5 - QUINTA | 6 - SEXTA | 7 - SÁBADO)\n");
                 printf("Digite o dia da semana em que o programa é exibido: ");
                 scanf("%d", &opDia); printf("\n"); 
@@ -731,6 +731,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
         // Verifica se o apresentador já está na nova Stream
         Categorias *CTnova = novaST->dado.STREAM.categorias;
         Arvore *res = NULL;
+        Categorias *cat = existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
         // res = o programa do apresentador ou nulo | cat = a categoria que guarda a árvore de programas do programa em res
 
         // Só começa a alterar se res == NULL
@@ -748,8 +749,7 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
                     // EcerraST = coloca a data de término na Stream no vetor de Streams antigas
                     encerraST(apresentador);
                     res = NULL;
-                    existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
- 
+                    cat = existeApresentadorEmCategorias(atualST->dado.STREAM.categorias, apresentador->nome, &res); 
 
                     // Substitui apresentador do programa atual da stream
                     strcpy(res->dado.PROGRAMA.NomeApresentador, substituto->nome);

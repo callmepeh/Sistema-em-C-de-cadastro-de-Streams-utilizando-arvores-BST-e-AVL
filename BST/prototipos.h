@@ -79,7 +79,7 @@ struct tm *tempoAtual();
 
 int ehFolha(Arvore *no);
 Arvore *soUmFilho(Arvore *no);
-Arvore *maiorAhEsquerda(Arvore *no);
+Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior);
 
 int existeCategoria(Categorias *lista, char *nome);
 int existeApresentador(Apresentador *lista, char *nome);

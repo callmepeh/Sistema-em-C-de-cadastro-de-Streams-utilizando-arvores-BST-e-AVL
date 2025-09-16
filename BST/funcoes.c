@@ -71,10 +71,12 @@ Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
     Arvore *busca = no->esq;
     *paiMaior = no;
     while(busca->dir){
-        paiMaior = busca;
+        *paiMaior = busca;
         busca = busca->dir;
     }
     return (*paiMaior)->dir;
+    //if(no->dir) maiorAhEsquerda(no->dir);
+    //return no;
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -103,7 +105,6 @@ Apresentador *buscaApresentador(Apresentador *lista, char *nome){
 
 int existeCategoria(Categorias *lista, char *nome){
     int i = 0;
-    if(!lista || !nome) return i;
     deixaMaiuscula(nome);
     Categorias *cabeca = lista;
     do{
