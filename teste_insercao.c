@@ -4,7 +4,7 @@
 #include "AVL/prototipos.h"
 #include "BST/prototipos.h"
 
-#define N 10000  // ajuste conforme sua máquina
+#define N 5000000  // ajuste conforme sua máquina
 
 int main() {
     Arvore *raiz = inicializar();

@@ -75,8 +75,7 @@ Arvore *maiorAhEsquerda(Arvore *no, Arvore **paiMaior){
         busca = busca->dir;
     }
     return (*paiMaior)->dir;
-    //if(no->dir) maiorAhEsquerda(no->dir);
-    //return no;
+ 
 }
 
 int existeApresentador(Apresentador *lista, char *nome){
@@ -276,9 +275,6 @@ int removerDaArvore(Arvore **arvore, Arvore *vaiSerRemovido){
                     (*arvore)->dado = noMaior->dado;
                     paiMaior->dir = noMaior->esq;
                     auxi = noMaior;
-                    //auxi = maiorAhEsquerda((*arvore)->esq);
-                    //(*arvore)->dado = auxi->dado;
-                    //removerDaArvore(&((*arvore)->esq), auxi);
                 }
             }
             free(auxi);
@@ -325,7 +321,7 @@ void iniciaST(Apresentador *p){
     p->stAntigas[p->quantidadeStAntigas - 1].fim.mes = 0;
     p->stAntigas[p->quantidadeStAntigas - 1].fim.ano = 0;
 
-    free(infoTempoLocal); // libera ponteiro retornado por tempoAtualprintf("Erro ao alocar memoria para stAntigas!\n");
+    free(infoTempoLocal); 
 }
 
 
@@ -374,24 +370,21 @@ int cadastrarCategoria(Categorias *nova, char *nomeST, Arvore *arvST){
                 } while (atual != *lista);
 
                 if (anterior == NULL) {
-                    // Inserção antes do primeiro (nova menor que o atual primeiro)
-                    // Preciso achar o último para fechar o círculo
+
                     Categorias *ultimo = *lista;
                     while (ultimo->prox != *lista) ultimo = ultimo->prox;
                     ultimo->prox = nova;
                     nova->prox = *lista;
-                    *lista = nova; // nova vira o primeiro
+                    *lista = nova; 
                 } else {
-                    // Inserção no meio ou no final
                     anterior->prox = nova;
                     nova->prox = atual;
                 }
             }
         } else {
-            // Primeira categoria
             cadastrou = 1;
             *lista = nova;
-            nova->prox = nova; // circular
+            nova->prox = nova; 
         }
     }
     return cadastrou;
@@ -415,7 +408,6 @@ int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
             if(atual){
                 if(strcmp(novo->nome, atual->nome) != 0){
                     inseriu = 1;
-                    // Inserir no meio da lista
                     ant->prox = novo;
                     novo->ant = ant;
                     atual->ant = novo;
@@ -423,7 +415,6 @@ int inserirApresentadorOrdenado(Apresentador **lista, Apresentador *novo){
                 }
             }else {
                 inseriu = 1;
-                // Inserir no final da lista
                 ant->prox = novo;
                 novo->ant = ant;
             }
@@ -455,7 +446,6 @@ int cadastrarApresentador(Apresentador *novo, Arvore *arvST, Apresentador **list
 }
 
 // FUNÇÕES DE MOSTRAR/REMOVER DE LISTAS E FUNÇÕES
-// Precisa testar td abaixo
 
 void mostrarCategoriasDeST(char *nome, Arvore *arvST){
     deixaMaiuscula(nome);
@@ -609,42 +599,35 @@ int alterarStreamDeApresentador_removePrograma(Arvore *streams, Apresentador *ap
     int i = 0;
     deixaMaiuscula(nomeNovaStream);
     deixaMaiuscula(categoriaNovoPrograma);
-    // Pega a Stream atual e nova do apresentador
+  
     Arvore *atualST = buscarNaArvore(streams, apresentador->nomeStreamAtual);
     Arvore *novaST = buscarNaArvore(streams, nomeNovaStream);
 
-    // Só começa a alterar se as streams não forem nulas nem iguais
+
     if((atualST && novaST) && strcmp(atualST->dado.STREAM.nome, novaST->dado.STREAM.nome) != 0){
-        
-        // Verifica se o apresentador já está na nova Stream
+  
         Categorias *CTnova = novaST->dado.STREAM.categorias;
         Arvore *res = NULL;
         Categorias *cat = existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
-        // res = o programa do apresentador ou nulo | cat = a categoria que guarda a árvore de programas do programa em res
 
-        // Só começa a alterar se res == NULL
         if(!res){
 
-            // Verifica se a categoria que o apresentador vai entrar na nova Stream existe
+
             int j = existeCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
 
-            // Se existe
             if(j){
                 Categorias *auxi;
-                // EcerraST = coloca a data de término na Stream no vetor de Streams antigas e remove programa atual da stream
                 encerraST(apresentador);
                 res = NULL;
                 cat = existeApresentadorEmCategorias(atualST->dado.STREAM.categorias, apresentador->nome, &res); 
                 removerDaArvore(&(cat->programa), res);
 
-                // Aloca memória no vetor de stream antigas para a nova stream (só registra a data de início lá e o nome, data de fim é zerada)
                 apresentador->quantidadeStAntigas += 1;
                 strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                 iniciaST(apresentador);
                 strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
                 strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                 
-                // Insere o novo programa na nova Stream
                 auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                 i = inserirArvBin(&(auxi->programa), novoPrograma);
             }
@@ -660,49 +643,39 @@ int alterarStreamDeApresentador_substituiApresentadorPrograma(Arvore *streams, A
     int i = 0;
     deixaMaiuscula(nomeNovaStream);
     deixaMaiuscula(categoriaNovoPrograma);
-    // Pega a Stream atual e nova do apresentador
     Arvore *atualST = buscarNaArvore(streams, apresentador->nomeStreamAtual);
     Arvore *novaST = buscarNaArvore(streams, nomeNovaStream);
 
-    // Só começa a alterar se as streams não forem nulas nem iguais
     if((atualST && novaST) && strcmp(atualST->dado.STREAM.nome, novaST->dado.STREAM.nome) != 0){
         
-        // Verifica se o apresentador já está na nova Stream
         Categorias *CTnova = novaST->dado.STREAM.categorias;
         Arvore *res = NULL;
         Categorias *cat = existeApresentadorEmCategorias(CTnova, apresentador->nome, &res);
-        // res = o programa do apresentador ou nulo | cat = a categoria que guarda a árvore de programas do programa em res
 
-        // Só começa a alterar se res == NULL
         if(!res){
 
-            // Verifica se a categoria que o apresentador vai entrar na nova Stream existe
             int j = existeCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
 
-            // Se existe
             if(j){
                 Categorias *auxi;
-                // Insere o apresentador substituto na lista de apresentadores
+ 
                 int k = cadastrarApresentador(substituto, atualST, lista);
                 if(k){
-                    // EcerraST = coloca a data de término na Stream no vetor de Streams antigas
+
                     encerraST(apresentador);
                     res = NULL;
                     cat = existeApresentadorEmCategorias(atualST->dado.STREAM.categorias, apresentador->nome, &res); 
 
-                    // Substitui apresentador do programa atual da stream
                     strcpy(res->dado.PROGRAMA.NomeApresentador, substituto->nome);
                     iniciaST(substituto);
                     strcpy(substituto->nomeStreamAtual, atualST->dado.STREAM.nome);
 
-                    // Aloca memória no vetor de stream antigas para a nova stream (só registra a data de início lá e o nome, data de fim é zerada)
                     apresentador->quantidadeStAntigas += 1;
                     strcpy(apresentador->stAntigas[apresentador->quantidadeStAntigas - 1].nome, novaST->dado.STREAM.nome);
                     iniciaST(apresentador);
                     strcpy(apresentador->nomeStreamAtual, novaST->dado.STREAM.nome);
                     strcpy(apresentador->nomeCategoriaAtual, categoriaNovoPrograma);
                     
-                    // Insere o novo programa na nova Stream
                     auxi = buscaERetornaCategoria(novaST->dado.STREAM.categorias, categoriaNovoPrograma);
                     i = inserirArvBin(&(auxi->programa), novoPrograma);
                 }
